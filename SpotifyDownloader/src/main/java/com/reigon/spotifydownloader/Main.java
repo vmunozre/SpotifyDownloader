@@ -29,59 +29,18 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) {
-        
-        // Create an API instance. The default instance connects to https://api.spotify.com/.
-        Api api = Api.builder()
-                .clientId("0f7de34ee8774ddeab2c1894434c5a01")
-                .clientSecret("6ab44cdc4aed44dc9ae0455a30118d17")
-                .redirectURI("https://www.spotify.com/es/")
-                .build();
+        //url: https://open.spotify.com/user/reiner13/playlist/2plTFnZFDDIhyhGIGy377e
+        SpotifyProcessor spoti = new SpotifyProcessor();
+        spoti.process("https://open.spotify.com/user/reiner13/playlist/2plTFnZFDDIhyhGIGy377e");
 
-        final ClientCredentialsGrantRequest request = api.clientCredentialsGrant().build();
+        YoutubeSearch yout = new YoutubeSearch();
+        List<Cancion> canciones = new ArrayList<>();
 
-        /* Use the request object to make the request, either asynchronously (getAsync) or synchronously (get) */
-        final SettableFuture<ClientCredentials> responseFuture = request.getAsync();
+        canciones = yout.process(spoti.getListaCanciones());
 
-        /* Add callbacks to handle success and failure */
-        Futures.addCallback(responseFuture, new FutureCallback<ClientCredentials>() {
-            @Override
-            public void onSuccess(ClientCredentials clientCredentials) {
-
-
-                /* Set access token on the Api object so that it's used going forward */
-                api.setAccessToken(clientCredentials.getAccessToken());
-                //https://open.spotify.com/user/reiner13/playlist/2plTFnZFDDIhyhGIGy377e
-                final PlaylistTracksRequest PlayListTrackRequest = api.getPlaylistTracks("reiner13", "2plTFnZFDDIhyhGIGy377e").build();
-
-                try {
-                    Page<PlaylistTrack> page = PlayListTrackRequest.get();
-
-                    List<PlaylistTrack> playlistTracks = page.getItems();
-
-                    SpotifyProcessor spoti = new SpotifyProcessor();
-                    spoti.process(playlistTracks);
-
-                    YoutubeSearch yout = new YoutubeSearch();
-                    List<Cancion> canciones = new ArrayList<>();
-
-                    canciones = yout.process(spoti.getListaCanciones());
-
-                    for (Cancion cancion : canciones) {
-                        cancion.mostrarCancion();
-                    }
-
-                } catch (Exception e) {
-                    System.out.println("Something went wrong!" + e.getMessage());
-                }
-
-            }
-
-            @Override
-            public void onFailure(Throwable throwable) {
-                /* An error occurred while getting the access token. This is probably caused by the client id or
-     * client secret is invalid. */
-            }
-        });
+        for (Cancion cancion : canciones) {
+            cancion.mostrarCancion();
+        }
 
     }
 }
