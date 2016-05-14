@@ -86,6 +86,7 @@ public class YoutubeSearch {
 
                 if (searchResultList != null) {
                     track.setUrl("https://www.youtube.com/watch?v=" + searchResultList.get(0).getId().getVideoId());
+                    track.setVideoID(searchResultList.get(0).getId().getVideoId());
                 }
             } catch (GoogleJsonResponseException e) {
                 System.err.println("There was a service error: " + e.getDetails().getCode() + " : "
