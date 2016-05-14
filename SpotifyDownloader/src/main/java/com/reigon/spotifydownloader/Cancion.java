@@ -17,18 +17,22 @@ public class Cancion {
     private final String album;
     private List<String> artistas;
     private String url;
+    private String videoID;
     public Cancion(String nombre, String album){
         this.nombre = nombre;
         this.album = album;
         this.artistas = new ArrayList<>();
         this.url = "";
+        this.videoID = "";
     }
+    
     
     public String getQuery(){
         String query = nombre + " " + album + " ";
-        for(String artista : artistas){
-            query += artista + " ";
+        if(!artistas.isEmpty()){
+            query += artistas.get(0);
         }
+        
         return query;
     }
     
@@ -36,8 +40,15 @@ public class Cancion {
         artistas.add(artista);
     }
     
+    public String getVideoID() {
+        return videoID;
+    }
+
     //GETTERS AND SETTERS
-    
+    public void setVideoID(String videoID) {    
+        this.videoID = videoID;
+    }
+
     public String getUrl() {
         return url;
     }
