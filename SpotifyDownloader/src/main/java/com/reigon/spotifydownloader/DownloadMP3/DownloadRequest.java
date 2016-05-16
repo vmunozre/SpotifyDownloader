@@ -48,6 +48,8 @@ public class DownloadRequest implements Callable<File> {
 	/**
 	 * 
 	 * @param videoId
+         * @param path
+         * @param nombreCancion
 	 */
 	public DownloadRequest(String videoId, String path, String nombreCancion) {
 		this.videoId = videoId;

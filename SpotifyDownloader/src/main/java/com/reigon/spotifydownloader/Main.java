@@ -35,29 +35,38 @@ import java.util.logging.Logger;
 public class Main {
 
     public static void main(String[] args) {
+        
+        
+        
         //url: https://open.spotify.com/user/reiner13/playlist/2plTFnZFDDIhyhGIGy377e
+        //Url Prompt
+        UrlInputDialog input = new UrlInputDialog(new javax.swing.JFrame(), true);
+        input.setVisible(true);
+        String url = input.getUrl();
+        
         SpotifyProcessor spoti = new SpotifyProcessor();
-        spoti.process("https://open.spotify.com/user/reiner13/playlist/2XEKyEtXgeBsG8HxxuhhNb");
+        
+        spoti.process(url);
 
         YoutubeSearch yout = new YoutubeSearch();
-        List<Cancion> canciones = new ArrayList<>();
-
+        List<Cancion> canciones;
         canciones = yout.process(spoti.getListaCanciones());
         ExecutorService service = Executors.newCachedThreadPool();
         for (Cancion cancion : canciones) {
             
             try {
-                if(cancion.getVideoID() != ""){
+                if(!cancion.getVideoID().isEmpty()){
                     String nombreArchivo = (cancion.getNombre() + " - " + cancion.getAlbum()).replace("|", "").replace("/", "").replace(":", "").replace("*", "").replace("?", "").replace("<", "").replace(">", "");
                     service.submit(new DownloadRequest(cancion.getVideoID(),"./downloads/",nombreArchivo)).get();
                 }
-            } catch (InterruptedException ex) {
-                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ExecutionException ex) {
+            } catch (InterruptedException | ExecutionException ex) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             }
             //cancion.mostrarCancion();
+            
+            //cancion.mostrarCancion();
         }
         service.shutdown();
+        System.exit(0);
     }
 }
