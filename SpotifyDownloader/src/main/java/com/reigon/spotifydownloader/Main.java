@@ -20,6 +20,7 @@ import com.wrapper.spotify.models.Page;
 import com.wrapper.spotify.models.Playlist;
 import com.wrapper.spotify.models.PlaylistTrack;
 import com.wrapper.spotify.models.SimpleArtist;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -46,7 +47,11 @@ public class Main {
         
         SpotifyProcessor spoti = new SpotifyProcessor();
         
-        spoti.process(url);
+        try {
+            spoti.process(url);
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         YoutubeSearch yout = new YoutubeSearch();
         List<Cancion> canciones;

@@ -36,6 +36,7 @@ public class Cancion {
         return query;
     }
     
+    
     public void addArtista(String artista){
         artistas.add(artista);
     }

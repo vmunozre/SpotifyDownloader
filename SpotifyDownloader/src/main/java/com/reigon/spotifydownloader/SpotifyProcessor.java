@@ -15,9 +15,12 @@ import com.wrapper.spotify.models.ClientCredentials;
 import com.wrapper.spotify.models.Page;
 import com.wrapper.spotify.models.PlaylistTrack;
 import com.wrapper.spotify.models.SimpleArtist;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 
 /**
  *
@@ -31,12 +34,14 @@ public class SpotifyProcessor {
         listaCanciones = new ArrayList<>();
     }
 
-    public void process(String url) {
+    public void process(String url) throws UnsupportedEncodingException {
+        //tenemos que decodear y encodear nombres de usuario por reasons
         
-        String user = getUser(url);
+        String user = URLEncoder.encode(URLDecoder.decode(getUser(url),"UTF-8"),"UTF-8");
         String idP = getIdPlayList(url);
         
         System.out.println("Usuario: " + user + " - ID: " + idP);
+        
         
         // Create an API instance. The default instance connects to https://api.spotify.com/.
         Api api = Api.builder()
@@ -44,7 +49,6 @@ public class SpotifyProcessor {
                 .clientSecret("6ab44cdc4aed44dc9ae0455a30118d17")
                 .redirectURI("https://www.spotify.com/es/")
                 .build();
-
         final ClientCredentialsGrantRequest request = api.clientCredentialsGrant().build();
 
         /* Use the request object to make the request, either asynchronously (getAsync) or synchronously (get) */
@@ -60,6 +64,7 @@ public class SpotifyProcessor {
                 api.setAccessToken(clientCredentials.getAccessToken());
                 //https://open.spotify.com/user/reiner13/playlist/2plTFnZFDDIhyhGIGy377e
                 final PlaylistTracksRequest PlayListTrackRequest = api.getPlaylistTracks(user, idP).build();
+  
 
                 try {
                     Page<PlaylistTrack> page = PlayListTrackRequest.get();

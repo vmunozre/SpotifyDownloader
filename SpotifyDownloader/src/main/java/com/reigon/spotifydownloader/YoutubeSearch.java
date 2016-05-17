@@ -84,9 +84,12 @@ public class YoutubeSearch {
 
                 List<SearchResult> searchResultList = searchResponse.getItems();
 
-                if (searchResultList != null) {
+                if (!searchResultList.isEmpty()) {
+                    //Aqui iria el codigo de una segunda búsqueda mas abierta
                     track.setUrl("https://www.youtube.com/watch?v=" + searchResultList.get(0).getId().getVideoId());
                     track.setVideoID(searchResultList.get(0).getId().getVideoId());
+                }else{
+                    System.out.println("La pista "+ track.getQuery()+ " no se ha encontrado");
                 }
             } catch (GoogleJsonResponseException e) {
                 System.err.println("There was a service error: " + e.getDetails().getCode() + " : "
