@@ -32,6 +32,7 @@ public class SpotifyProcessor {
 
     List<Cancion> listaCanciones;
     private int numTracks;
+    Api api;
 
     public SpotifyProcessor() {
         listaCanciones = new ArrayList<>();
@@ -47,7 +48,7 @@ public class SpotifyProcessor {
         System.out.println("Usuario: " + user + " - ID: " + idP);
 
         // Create an API instance. The default instance connects to https://api.spotify.com/.
-        Api api = Api.builder()
+        api = Api.builder()
                 .clientId("0f7de34ee8774ddeab2c1894434c5a01")
                 .clientSecret("6ab44cdc4aed44dc9ae0455a30118d17")
                 .redirectURI("https://www.spotify.com/es/")
@@ -75,33 +76,7 @@ public class SpotifyProcessor {
                     System.out.println("Something went wrong!" + e.getMessage());
                 }
                 for (int i = 0; i <= numTracks - 1; i += 50) {
-                    //https://open.spotify.com/user/reiner13/playlist/2plTFnZFDDIhyhGIGy377e
-                    final PlaylistTracksRequest PlayListTrackRequest = api.getPlaylistTracks(user, idP).offset(i).limit(50).build();
-                    //DA UN ERROR AQUI. ALGUNOS NO FUNCIONAN, REVISAR (he reducido el limite a 50 para miminizar el impacto del error de momento)
-                        
-                        try {
-                            Page<PlaylistTrack> page = PlayListTrackRequest.get();
-
-                            List<PlaylistTrack> playlistTracks = page.getItems();
-                            System.out.println("OFFSET = " + i + " - Numero de tracks encontrados = " + playlistTracks.size());
-                            for (PlaylistTrack playlistTrack : playlistTracks) {
-                                String nombre = playlistTrack.getTrack().getName();
-                                String album = playlistTrack.getTrack().getAlbum().getName();
-                                Cancion track = new Cancion(nombre, album);
-
-                                List<SimpleArtist> artistas = playlistTrack.getTrack().getArtists();
-
-                                for (SimpleArtist artista : artistas) {
-                                    track.addArtista(artista.getName());
-                                }
-
-                                listaCanciones.add(track);
-                            }
-
-                        } catch (Exception e) {
-                            System.out.println("Something went wrong! : " + e.getMessage());
-                        }
-                   
+                    cargarCanciones(i, 50, user, idP);
                 }
 
             }
@@ -113,6 +88,39 @@ public class SpotifyProcessor {
             }
         });
 
+    }
+
+    private void cargarCanciones(int offset, int limit, String user, String idP) {
+        //https://open.spotify.com/user/reiner13/playlist/2plTFnZFDDIhyhGIGy377e
+        final PlaylistTracksRequest playListTrackRequest = api.getPlaylistTracks(user, idP).offset(offset).limit(limit).build();
+        //DA UN ERROR AQUI. ALGUNOS NO FUNCIONAN, REVISAR (he reducido el limite a 50 para miminizar el impacto del error de momento)
+
+        try {
+
+            Page<PlaylistTrack> page = playListTrackRequest.get();
+
+            List<PlaylistTrack> playlistTracks = page.getItems();
+            System.out.println("OFFSET = " + offset + " - Numero de tracks encontrados = " + playlistTracks.size());
+            for (PlaylistTrack playlistTrack : playlistTracks) {
+                String nombre = playlistTrack.getTrack().getName();
+                String album = playlistTrack.getTrack().getAlbum().getName();
+                Cancion track = new Cancion(nombre, album);
+
+                List<SimpleArtist> artistas = playlistTrack.getTrack().getArtists();
+
+                for (SimpleArtist artista : artistas) {
+                    track.addArtista(artista.getName());
+                }
+
+                listaCanciones.add(track);
+            }
+            Thread.sleep(5000);
+        } catch (Exception e) {
+            System.out.println("Something went wrong! : " + e.getMessage());
+            //cargarCanciones(offset+1, limit-1, user, idP);
+            
+           // e.printStackTrace();
+        }
     }
 
     public String getIdPlayList(String url) {

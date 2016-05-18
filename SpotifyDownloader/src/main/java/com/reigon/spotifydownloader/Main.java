@@ -58,7 +58,7 @@ public class Main {
         canciones = yout.process(spoti.getListaCanciones());
         ExecutorService service = Executors.newCachedThreadPool();
         //Comento para pruebas
-        for (Cancion cancion : canciones) {
+        /*for (Cancion cancion : canciones) {
             
             try {
                 if(!cancion.getVideoID().isEmpty()){
@@ -72,7 +72,7 @@ public class Main {
             
             //cancion.mostrarCancion();
         }
-        service.shutdown();
+        service.shutdown();*/
         System.exit(0);
     }
 }
