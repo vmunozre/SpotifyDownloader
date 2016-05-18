@@ -33,19 +33,22 @@ public class SpotifyProcessor {
     List<Cancion> listaCanciones;
     private int numTracks;
     Api api;
+    TextUI textui;
 
-    public SpotifyProcessor() {
+    public SpotifyProcessor(TextUI t) {
         listaCanciones = new ArrayList<>();
         int numTracks = 0;
+        this.textui = t;
     }
 
     public void process(String url) throws UnsupportedEncodingException {
         //tenemos que decodear y encodear nombres de usuario por reasons
-
+        
         String user = URLEncoder.encode(URLDecoder.decode(getUser(url), "UTF-8"), "UTF-8");
         String idP = getIdPlayList(url);
 
         System.out.println("Usuario: " + user + " - ID: " + idP);
+        textui.printText("Usuario: " + user + " - ID: " + idP);
 
         // Create an API instance. The default instance connects to https://api.spotify.com/.
         api = Api.builder()
@@ -72,13 +75,15 @@ public class SpotifyProcessor {
                     final Playlist playlist = infoPlayListRequest.get();
                     numTracks = playlist.getTracks().getTotal();
                     System.out.println("Num Tracks PlayList: " + numTracks);
+                    textui.printText("Num Tracks PlayList: " + numTracks);
                 } catch (Exception e) {
                     System.out.println("Something went wrong!" + e.getMessage());
+                    textui.printText("Something went wrong!" + e.getMessage());
                 }
                 for (int i = 0; i <= numTracks - 1; i += 50) {
-                    cargarCanciones(i, 50, user, idP);
+                    cargarCanciones(i, 50, user, idP,textui);
                 }
-
+         
             }
 
             @Override
@@ -90,7 +95,7 @@ public class SpotifyProcessor {
 
     }
 
-    private void cargarCanciones(int offset, int limit, String user, String idP) {
+    private void cargarCanciones(int offset, int limit, String user, String idP, TextUI textui) {
         //https://open.spotify.com/user/reiner13/playlist/2plTFnZFDDIhyhGIGy377e
         final PlaylistTracksRequest playListTrackRequest = api.getPlaylistTracks(user, idP).offset(offset).limit(limit).build();
         //DA UN ERROR AQUI. ALGUNOS NO FUNCIONAN, REVISAR (he reducido el limite a 50 para miminizar el impacto del error de momento)
@@ -101,6 +106,8 @@ public class SpotifyProcessor {
 
             List<PlaylistTrack> playlistTracks = page.getItems();
             System.out.println("OFFSET = " + offset + " - Numero de tracks encontrados = " + playlistTracks.size());
+            textui.printText("OFFSET = " + offset + " - Numero de tracks encontrados = " + playlistTracks.size());
+            
             for (PlaylistTrack playlistTrack : playlistTracks) {
                 String nombre = playlistTrack.getTrack().getName();
                 String album = playlistTrack.getTrack().getAlbum().getName();
@@ -117,6 +124,7 @@ public class SpotifyProcessor {
             Thread.sleep(5000);
         } catch (Exception e) {
             System.out.println("Something went wrong! : " + e.getMessage());
+            textui.printText("Something went wrong! : " + e.getMessage());
             //cargarCanciones(offset+1, limit-1, user, idP);
             
            // e.printStackTrace();

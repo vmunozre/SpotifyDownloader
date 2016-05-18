@@ -45,25 +45,32 @@ public class Main {
         input.setVisible(true);
         String url = input.getUrl();
         
-        SpotifyProcessor spoti = new SpotifyProcessor();
+        TextUI textui = new TextUI();
+        textui.setVisible(true);
+        textui.printText("Recuperando lista de Spotify");
+        
+        SpotifyProcessor spoti = new SpotifyProcessor(textui);
         
         try {
             spoti.process(url);
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        YoutubeSearch yout = new YoutubeSearch();
+        textui.clearText();
+        textui.printText("Buscando Canciones");
+        YoutubeSearch yout = new YoutubeSearch(textui);
         List<Cancion> canciones;
         canciones = yout.process(spoti.getListaCanciones());
-        ExecutorService service = Executors.newCachedThreadPool();
+        ExecutorService service = Executors.newFixedThreadPool(5);
+        textui.clearText();
+        textui.printText("Descargando Canciones");
         //Comento para pruebas
-        /*for (Cancion cancion : canciones) {
+        for (Cancion cancion : canciones) {
             
             try {
                 if(!cancion.getVideoID().isEmpty()){
-                    String nombreArchivo = (cancion.getNombre() + " - " + cancion.getAlbum()).replace("|", "").replace("/", "").replace(":", "").replace("*", "").replace("?", "").replace("<", "").replace(">", "");
-                    service.submit(new DownloadRequest(cancion.getVideoID(),"./downloads/",nombreArchivo)).get();
+                    String nombreArchivo = (cancion.getNombre() + " - " + cancion.getArtistas().get(0)).replace("|", "").replace("/", "").replace(":", "").replace("*", "").replace("?", "").replace("<", "").replace(">", "");
+                    service.submit(new DownloadRequest(cancion.getVideoID(),"./downloads/",nombreArchivo,textui)).get();
                 }
             } catch (InterruptedException | ExecutionException ex) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
@@ -72,7 +79,7 @@ public class Main {
             
             //cancion.mostrarCancion();
         }
-        service.shutdown();*/
+        service.shutdown();
         System.exit(0);
     }
 }

@@ -46,10 +46,11 @@ public class YoutubeSearch {
      * Global instance of Youtube object to make all API requests.
      */
     private static YouTube youtube;
+    TextUI textui;
 
-    public YoutubeSearch() {
+    public YoutubeSearch(TextUI t) {
         listaCanciones = new ArrayList<>();
-
+        textui = t;
     }
 
     public List<Cancion> process(List<Cancion> canciones) {
@@ -57,9 +58,9 @@ public class YoutubeSearch {
         for (Cancion track : canciones) {
             try {
                 /*
-       * The YouTube object is used to make all API requests. The last argument is required, but
-       * because we don't need anything initialized when the HttpRequest is initialized, we override
-       * the interface and provide a no-op function.
+                 * The YouTube object is used to make all API requests. The last argument is required, but
+                 * because we don't need anything initialized when the HttpRequest is initialized, we override
+                 * the interface and provide a no-op function.
                  */
                 youtube = new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY, new HttpRequestInitializer() {
                     public void initialize(HttpRequest request) throws IOException {
@@ -88,8 +89,23 @@ public class YoutubeSearch {
                     //Aqui iria el codigo de una segunda búsqueda mas abierta
                     track.setUrl("https://www.youtube.com/watch?v=" + searchResultList.get(0).getId().getVideoId());
                     track.setVideoID(searchResultList.get(0).getId().getVideoId());
-                }else{
-                    System.out.println("La pista "+ track.getQuery()+ " no se ha encontrado");
+                } else {
+                    System.out.println("La pista " + track.getQuery() + " no se ha encontrado, buscando de forma mas general");
+                    textui.printText("La pista " + track.getQuery() + " no se ha encontrado, buscando de forma mas general");
+                    queryTerm = track.getEasyQuery();
+                    search.setQ(queryTerm);
+                    searchResponse = search.execute();
+                    searchResultList = searchResponse.getItems();
+                    if (!searchResultList.isEmpty()) {
+                        //Aqui iria el codigo de una segunda búsqueda mas abierta
+                        track.setUrl("https://www.youtube.com/watch?v=" + searchResultList.get(0).getId().getVideoId());
+                        track.setVideoID(searchResultList.get(0).getId().getVideoId());
+                        System.out.println("Encontrado! "+ track.getEasyQuery() +" Comprueba que es la cancion que buscabas!");
+                        textui.printText("Encontrado! "+ track.getEasyQuery() +" Comprueba que es la cancion que buscabas!");
+                    } else {
+                        System.out.println("La pista " + track.getQuery() + " no se ha encontrado");
+                        textui.printText("La pista " + track.getQuery() + " no se ha encontrado");
+                    }
                 }
             } catch (GoogleJsonResponseException e) {
                 System.err.println("There was a service error: " + e.getDetails().getCode() + " : "

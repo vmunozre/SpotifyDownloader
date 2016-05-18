@@ -36,6 +36,15 @@ public class Cancion {
         return query;
     }
     
+    public String getEasyQuery(){
+        String query = nombre + " ";
+        if(!artistas.isEmpty()){
+            query += artistas.get(0);
+        }
+        
+        return query;
+    }
+    
     
     public void addArtista(String artista){
         artistas.add(artista);
