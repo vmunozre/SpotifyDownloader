@@ -113,9 +113,12 @@ public class DownloadRequest implements Callable<File> {
 			local.getChannel().transferFrom(remote, 0, Integer.MAX_VALUE);
 			local.close();
 			logger.info("download complete of: " + response.get("title"));
+                        textui.printText("Descargada: " + this.nombreCancion);
 			return file;
 		} catch (Exception ex) {
 			logger.warn("could not download video, removing file...");
+                        Scanner in = new Scanner(System.in);
+                        String enlace = in.nextLine();
 			file.delete();
 			throw new IOException(ex);
 		}

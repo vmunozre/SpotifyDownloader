@@ -99,8 +99,11 @@ public class YoutubeSearch {
                     
                     for(int i = 0; i <= searchResultList.size()-1; i++){
                         if(track.duracionAceptable(info.getLongitudVideo(searchResultList.get(i).getId().getVideoId(), API_KEY))){
+                            
+                        
                             track.setUrl("https://www.youtube.com/watch?v=" + searchResultList.get(i).getId().getVideoId());
                             track.setVideoID(searchResultList.get(i).getId().getVideoId());
+                            textui.printText("Pista Encontrada: "+ track.getNombre() + ", ID: " + track.getVideoID());
                             break;
                         }
                     }

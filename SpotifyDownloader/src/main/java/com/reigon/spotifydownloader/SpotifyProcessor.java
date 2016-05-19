@@ -68,6 +68,7 @@ public class SpotifyProcessor {
 
                 /* Set access token on the Api object so that it's used going forward */
                 api.setAccessToken(clientCredentials.getAccessToken());
+                textui.printText("Procediendo a analizar la playList...");
                 //Sacamos el numero de tracks que tiene la playlist
                 final PlaylistRequest infoPlayListRequest = api.getPlaylist(user, idP).build();
 
@@ -106,12 +107,13 @@ public class SpotifyProcessor {
 
             List<PlaylistTrack> playlistTracks = page.getItems();
             System.out.println("OFFSET = " + offset + " - Numero de tracks encontrados = " + playlistTracks.size());
-            textui.printText("OFFSET = " + offset + " - Numero de tracks encontrados = " + playlistTracks.size());
+            //textui.printText("OFFSET = " + offset + " - Numero de tracks encontrados = " + playlistTracks.size());
             
             for (PlaylistTrack playlistTrack : playlistTracks) {
                 String nombre = playlistTrack.getTrack().getName();
                 String album = playlistTrack.getTrack().getAlbum().getName();
                 int duracion = playlistTrack.getTrack().getDuration();
+                textui.printText("Canción: " + nombre + " - Album: " + album + " AÑADIDA A LA BUSQUEDA!");
                 //System.out.println("Cancion: " + nombre +" - Duracion: " + duracion);
                 Cancion track = new Cancion(nombre, album, duracion);
 
