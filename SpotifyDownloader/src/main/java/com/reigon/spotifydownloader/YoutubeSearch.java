@@ -18,6 +18,7 @@ import com.google.api.services.youtube.model.SearchResult;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.stream.Collectors;
 
 /**
@@ -42,7 +43,7 @@ public class YoutubeSearch {
      * limit per page).
      */
     private static final long NUMBER_OF_VIDEOS_RETURNED = 25;
-
+    public static final String API_KEY = "AIzaSyCkQfDbMO7A7Dtq062uB6xtRRmWypDIrAw";
     /**
      * Global instance of Youtube object to make all API requests.
      */
@@ -55,7 +56,7 @@ public class YoutubeSearch {
     }
 
     public List<Cancion> process(List<Cancion> canciones) {
-
+        YoutubeVideoInfo info = new YoutubeVideoInfo();
         for (Cancion track : canciones) {
             try {
                 /*
@@ -73,7 +74,7 @@ public class YoutubeSearch {
 
                 YouTube.Search.List search = youtube.search().list("id,snippet");
                 //No deberiamos poner el api key a pelo
-                String apiKey = "AIzaSyCkQfDbMO7A7Dtq062uB6xtRRmWypDIrAw";
+                String apiKey = API_KEY;
                 search.setKey(apiKey);
                 search.setQ(queryTerm);
 
@@ -88,14 +89,52 @@ public class YoutubeSearch {
 
                 if (!searchResultList.isEmpty()) {
                     //Aqui iria el codigo de una segunda búsqueda mas abierta
-                   
+
                     /*List<SearchResult> filtered = searchResultList.stream()
                                                     .filter(vi -> vi.getSnippet().getTitle().contains("lyrics"))
                                                     .collect(Collectors.toList());*/
-                   
+                   // track.setUrl("https://www.youtube.com/watch?v=" + searchResultList.get(0).getId().getVideoId());
+                    //track.setVideoID(searchResultList.get(0).getId().getVideoId());
                     
-                    track.setUrl("https://www.youtube.com/watch?v=" + searchResultList.get(0).getId().getVideoId());
-                    track.setVideoID(searchResultList.get(0).getId().getVideoId());    
+                    
+                    for(int i = 0; i <= searchResultList.size()-1; i++){
+                        if(track.duracionAceptable(info.getLongitudVideo(searchResultList.get(i).getId().getVideoId(), API_KEY))){
+                            track.setUrl("https://www.youtube.com/watch?v=" + searchResultList.get(i).getId().getVideoId());
+                            track.setVideoID(searchResultList.get(i).getId().getVideoId());
+                            break;
+                        }
+                    }
+                    if(track.getUrl().equals("")){
+                        System.out.println("La pista " + track.getQuery() + " no se ha encontrado, buscando de forma mas general");
+                        textui.printText("La pista " + track.getQuery() + " no se ha encontrado, buscando de forma mas general");
+                        queryTerm = track.getEasyQuery();
+                        search.setQ(queryTerm);
+                        searchResponse = search.execute();
+                        searchResultList = searchResponse.getItems();
+
+                        if (!searchResultList.isEmpty()) {
+                            //Aqui iria el codigo de una segunda búsqueda mas abierta
+
+                            for(int i = 0; i <= searchResultList.size()-1; i++){
+                                if(track.duracionAceptable(info.getLongitudVideo(searchResultList.get(i).getId().getVideoId(), API_KEY))){
+                                    track.setUrl("https://www.youtube.com/watch?v=" + searchResultList.get(i).getId().getVideoId());
+                                    track.setVideoID(searchResultList.get(i).getId().getVideoId());
+                                    break;
+                                }
+                            }
+                            if(track.getUrl().equals("")){
+                                System.out.println("La pista " + track.getQuery() + " no se ha encontrado");
+                                textui.printText("La pista " + track.getQuery() + " no se ha encontrado");
+                            }else{
+                                System.out.println("Encontrado! " + track.getEasyQuery() + " Comprueba que es la cancion que buscabas!");
+                                textui.printText("Encontrado! " + track.getEasyQuery() + " Comprueba que es la cancion que buscabas!");
+                            }
+                            } else {
+                                System.out.println("La pista " + track.getQuery() + " no se ha encontrado");
+                                textui.printText("La pista " + track.getQuery() + " no se ha encontrado");
+                        }
+                    }
+                    System.out.println("Video: " + track.getUrl() + " - Longitud: " + info.getLongitudVideo(track.getVideoID(), API_KEY));
                 } else {
                     System.out.println("La pista " + track.getQuery() + " no se ha encontrado, buscando de forma mas general");
                     textui.printText("La pista " + track.getQuery() + " no se ha encontrado, buscando de forma mas general");
@@ -103,14 +142,19 @@ public class YoutubeSearch {
                     search.setQ(queryTerm);
                     searchResponse = search.execute();
                     searchResultList = searchResponse.getItems();
-                    
+
                     if (!searchResultList.isEmpty()) {
                         //Aqui iria el codigo de una segunda búsqueda mas abierta
-                       
-                        track.setUrl("https://www.youtube.com/watch?v=" + searchResultList.get(0).getId().getVideoId());
-                        track.setVideoID(searchResultList.get(0).getId().getVideoId());
-                        System.out.println("Encontrado! "+ track.getEasyQuery() +" Comprueba que es la cancion que buscabas!");
-                        textui.printText("Encontrado! "+ track.getEasyQuery() +" Comprueba que es la cancion que buscabas!");
+
+                        for(int i = 0; i <= searchResultList.size()-1; i++){
+                            if(track.duracionAceptable(info.getLongitudVideo(searchResultList.get(i).getId().getVideoId(), API_KEY))){
+                                track.setUrl("https://www.youtube.com/watch?v=" + searchResultList.get(i).getId().getVideoId());
+                                track.setVideoID(searchResultList.get(i).getId().getVideoId());
+                                break;
+                            }
+                        }
+                        System.out.println("Encontrado! " + track.getEasyQuery() + " Comprueba que es la cancion que buscabas!");
+                        textui.printText("Encontrado! " + track.getEasyQuery() + " Comprueba que es la cancion que buscabas!");
                     } else {
                         System.out.println("La pista " + track.getQuery() + " no se ha encontrado");
                         textui.printText("La pista " + track.getQuery() + " no se ha encontrado");
