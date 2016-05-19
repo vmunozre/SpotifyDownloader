@@ -37,9 +37,11 @@ import javax.swing.JFileChooser;
  * @author Reiner
  */
 public class Main {
+    
+    
 
     public static void main(String[] args) {
-
+        ArrayList<Cancion> failedsongs = new ArrayList<Cancion>();
         //url: https://open.spotify.com/user/reiner13/playlist/2plTFnZFDDIhyhGIGy377e
         //Url Prompt
         UrlInputDialog input = new UrlInputDialog(new javax.swing.JFrame(), true);
@@ -80,15 +82,27 @@ public class Main {
             } catch (InterruptedException | ExecutionException ex) {
                 System.out.println("El video " + cancion.getUrl() + " No ha podido descargarse, por favor bajalo manualmente");
                 textui.printText("La canción " + cancion.getNombre() + " No ha podido descargarse, por favor, descargala manualmente");
-                //Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                failedsongs.add(cancion);
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             }
             //cancion.mostrarCancion();
 
             //cancion.mostrarCancion();
         }
         service.shutdown();
-        //Scanner in = new Scanner(System.in);
-        //String dameunrespirochicoqueterminasmuyrapido = in.nextLine();
+        textui.clearText();
+        textui.printText("Estas son las canciones que no se han podido descargar automáticamente");
+        textui.printText("puedes bajartelas manualmente utilizando el link en youtube-mp3.org");
+        textui.printText("Canciones fallidas: "+failedsongs.size());
+        
+        for (Cancion s : failedsongs){
+            textui.printText("Titulo de la canción: "+s.getNombre()+" - "+s.getArtistas().get(0));
+            textui.printText("Link de descarga: "+s.getUrl());
+        }
+        
+        textui.printText("Se ha terminado de descargar ------ Ya puede cerrar la aplicación ");
+        Scanner in = new Scanner(System.in);
+        String dameunrespirochicoqueterminasmuyrapido = in.nextLine();
         System.exit(0);
     }
 }

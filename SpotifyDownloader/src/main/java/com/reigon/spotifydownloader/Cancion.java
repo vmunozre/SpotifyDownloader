@@ -33,21 +33,21 @@ public class Cancion {
     }
 
     public String getQuery() {
-        String query = "" + nombre + " " + album + " ";
+        String query = "\"" + nombre + " ";
         if (!artistas.isEmpty()) {
             query += artistas.get(0);
         }
         
-        return query + "";
+        return query + "\"";
     }
 
     public String getEasyQuery() {
-        String query = "" + nombre + " ";
+        String query = nombre + " ";
         if (!artistas.isEmpty()) {
             query += artistas.get(0);
         }
 
-        return query + "";
+        return query;
     }
     public boolean duracionAceptable(int duracionVideo){
         return (((duracion-UMBRAL)<=duracionVideo) && (duracionVideo < (duracion+UMBRAL)));          

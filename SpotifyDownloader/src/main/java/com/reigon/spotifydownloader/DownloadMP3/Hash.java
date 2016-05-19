@@ -1,6 +1,7 @@
 package com.reigon.spotifydownloader.DownloadMP3;
 
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import javax.script.Invocable;
@@ -48,7 +49,9 @@ public class Hash {
 	 */
 	@SuppressWarnings("unchecked")
 	private static <T> T callFunction(String name, Object... params) throws FileNotFoundException, ScriptException, NoSuchMethodException {
-		engine.eval(new InputStreamReader(ClassLoader.getSystemResourceAsStream("./youtube-mp3.js")));
+                ClassLoader cl = Thread.currentThread().getContextClassLoader();
+                InputStream is = cl.getResourceAsStream("youtube-mp3.js");
+		engine.eval(new InputStreamReader(is));
 		Invocable invocable = (Invocable) engine;
 		return (T) invocable.invokeFunction("sig", params);
 	}
