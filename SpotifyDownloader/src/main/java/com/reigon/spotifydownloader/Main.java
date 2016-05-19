@@ -20,6 +20,7 @@ import com.wrapper.spotify.models.Page;
 import com.wrapper.spotify.models.Playlist;
 import com.wrapper.spotify.models.PlaylistTrack;
 import com.wrapper.spotify.models.SimpleArtist;
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 
 /**
  *
@@ -37,21 +39,23 @@ import java.util.logging.Logger;
 public class Main {
 
     public static void main(String[] args) {
-        
-        
-        
+
         //url: https://open.spotify.com/user/reiner13/playlist/2plTFnZFDDIhyhGIGy377e
         //Url Prompt
         UrlInputDialog input = new UrlInputDialog(new javax.swing.JFrame(), true);
         input.setVisible(true);
         String url = input.getUrl();
-        
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        fileChooser.showOpenDialog(null);
+        String path = fileChooser.getSelectedFile().getAbsolutePath() + File.separator;
+        System.out.println("Path: " + path);
         TextUI textui = new TextUI();
         textui.setVisible(true);
         textui.printText("Recuperando lista de Spotify");
-        
+
         SpotifyProcessor spoti = new SpotifyProcessor(textui);
-        
+
         try {
             spoti.process(url);
         } catch (UnsupportedEncodingException ex) {
@@ -67,23 +71,24 @@ public class Main {
         textui.printText("Descargando Canciones");
         //Comento para pruebas
         for (Cancion cancion : canciones) {
-            
+
             try {
-                if(!cancion.getVideoID().isEmpty()){
+                if (!cancion.getVideoID().isEmpty()) {
                     String nombreArchivo = (cancion.getNombre() + " - " + cancion.getArtistas().get(0)).replace("|", "").replace("/", "").replace(":", "").replace("*", "").replace("?", "").replace("<", "").replace(">", "");
-                    service.submit(new DownloadRequest(cancion.getVideoID(),"./downloads/",nombreArchivo,textui)).get();
+                    service.submit(new DownloadRequest(cancion.getVideoID(), path, nombreArchivo, textui)).get();
                 }
             } catch (InterruptedException | ExecutionException ex) {
-                System.out.println("El video "+ cancion.getUrl() + " No ha podido descargarse, por favor bajalo manualmente");
+                System.out.println("El video " + cancion.getUrl() + " No ha podido descargarse, por favor bajalo manualmente");
+                textui.printText("La canción " + cancion.getNombre() + " No ha podido descargarse, por favor, descargala manualmente");
                 //Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             }
             //cancion.mostrarCancion();
-            
+
             //cancion.mostrarCancion();
         }
         service.shutdown();
-         //Scanner in = new Scanner(System.in);
-         //String dameunrespirochicoqueterminasmuyrapido = in.nextLine();
+        //Scanner in = new Scanner(System.in);
+        //String dameunrespirochicoqueterminasmuyrapido = in.nextLine();
         System.exit(0);
     }
 }
