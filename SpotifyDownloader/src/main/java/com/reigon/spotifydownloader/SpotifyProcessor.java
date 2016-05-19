@@ -111,7 +111,9 @@ public class SpotifyProcessor {
             for (PlaylistTrack playlistTrack : playlistTracks) {
                 String nombre = playlistTrack.getTrack().getName();
                 String album = playlistTrack.getTrack().getAlbum().getName();
-                Cancion track = new Cancion(nombre, album);
+                int duracion = playlistTrack.getTrack().getDuration();
+                //System.out.println("Cancion: " + nombre +" - Duracion: " + duracion);
+                Cancion track = new Cancion(nombre, album, duracion);
 
                 List<SimpleArtist> artistas = playlistTrack.getTrack().getArtists();
 
