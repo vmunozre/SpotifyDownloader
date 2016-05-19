@@ -18,6 +18,7 @@ import com.google.api.services.youtube.model.SearchResult;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -87,8 +88,14 @@ public class YoutubeSearch {
 
                 if (!searchResultList.isEmpty()) {
                     //Aqui iria el codigo de una segunda búsqueda mas abierta
+                   
+                    /*List<SearchResult> filtered = searchResultList.stream()
+                                                    .filter(vi -> vi.getSnippet().getTitle().contains("lyrics"))
+                                                    .collect(Collectors.toList());*/
+                   
+                    
                     track.setUrl("https://www.youtube.com/watch?v=" + searchResultList.get(0).getId().getVideoId());
-                    track.setVideoID(searchResultList.get(0).getId().getVideoId());
+                    track.setVideoID(searchResultList.get(0).getId().getVideoId());    
                 } else {
                     System.out.println("La pista " + track.getQuery() + " no se ha encontrado, buscando de forma mas general");
                     textui.printText("La pista " + track.getQuery() + " no se ha encontrado, buscando de forma mas general");
@@ -96,8 +103,10 @@ public class YoutubeSearch {
                     search.setQ(queryTerm);
                     searchResponse = search.execute();
                     searchResultList = searchResponse.getItems();
+                    
                     if (!searchResultList.isEmpty()) {
                         //Aqui iria el codigo de una segunda búsqueda mas abierta
+                       
                         track.setUrl("https://www.youtube.com/watch?v=" + searchResultList.get(0).getId().getVideoId());
                         track.setVideoID(searchResultList.get(0).getId().getVideoId());
                         System.out.println("Encontrado! "+ track.getEasyQuery() +" Comprueba que es la cancion que buscabas!");

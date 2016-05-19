@@ -23,6 +23,7 @@ import com.wrapper.spotify.models.SimpleArtist;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -73,13 +74,16 @@ public class Main {
                     service.submit(new DownloadRequest(cancion.getVideoID(),"./downloads/",nombreArchivo,textui)).get();
                 }
             } catch (InterruptedException | ExecutionException ex) {
-                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("El video "+ cancion.getUrl() + " No ha podido descargarse, por favor bajalo manualmente");
+                //Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             }
             //cancion.mostrarCancion();
             
             //cancion.mostrarCancion();
         }
         service.shutdown();
+         //Scanner in = new Scanner(System.in);
+         //String dameunrespirochicoqueterminasmuyrapido = in.nextLine();
         System.exit(0);
     }
 }

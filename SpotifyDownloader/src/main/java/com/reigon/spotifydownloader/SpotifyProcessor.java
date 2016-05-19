@@ -121,7 +121,7 @@ public class SpotifyProcessor {
 
                 listaCanciones.add(track);
             }
-            Thread.sleep(5000);
+            Thread.sleep(1000);
         } catch (Exception e) {
             System.out.println("Something went wrong! : " + e.getMessage());
             textui.printText("Something went wrong! : " + e.getMessage());

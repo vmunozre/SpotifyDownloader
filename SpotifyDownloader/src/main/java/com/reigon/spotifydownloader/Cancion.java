@@ -32,7 +32,7 @@ public class Cancion {
         if(!artistas.isEmpty()){
             query += artistas.get(0);
         }
-        
+        query += "";
         return query;
     }
     
