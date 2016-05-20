@@ -20,6 +20,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
@@ -65,21 +67,15 @@ public class YoutubeSearch {
         String resultado = "";
         FileReader fr = null;
         try {
-            ClassLoader classLoader = getClass().getClassLoader();
-            File archivo = new File(classLoader.getResource("YSAPI_KEYS.txt").getFile());
-            fr = new FileReader (archivo);
-            BufferedReader br = new BufferedReader(fr);
+            InputStream in = getClass().getResourceAsStream("/YSAPI_KEYS.txt"); 
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            //ClassLoader classLoader = getClass().getClassLoader();
+            //File archivo = new File(classLoader.getResource("YSAPI_KEYS.txt").getFile());
+            //fr = new FileReader (archivo);
+            //BufferedReader br = new BufferedReader(fr);
             resultado = br.readLine();
-        } catch (FileNotFoundException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(YoutubeSearch.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(YoutubeSearch.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                fr.close();
-            } catch (IOException ex) {
-                Logger.getLogger(YoutubeSearch.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
         return resultado;
     }
