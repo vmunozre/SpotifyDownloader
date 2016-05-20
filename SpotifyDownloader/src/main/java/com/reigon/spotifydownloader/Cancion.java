@@ -33,12 +33,12 @@ public class Cancion {
     }
 
     public String getQuery() {
-        String query = "\"" + nombre + " ";
+        String query = nombre + " ";
         if (!artistas.isEmpty()) {
-            query += artistas.get(0);
+            query += "\"" + artistas.get(0) + "\"";
         }
         
-        return query + "\"";
+        return query;
     }
 
     public String getEasyQuery() {
