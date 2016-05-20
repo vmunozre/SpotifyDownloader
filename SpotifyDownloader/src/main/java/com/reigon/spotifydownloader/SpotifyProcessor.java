@@ -17,12 +17,19 @@ import com.wrapper.spotify.models.Page;
 import com.wrapper.spotify.models.Playlist;
 import com.wrapper.spotify.models.PlaylistTrack;
 import com.wrapper.spotify.models.SimpleArtist;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -30,17 +37,41 @@ import java.net.URLEncoder;
  */
 public class SpotifyProcessor {
 
-    List<Cancion> listaCanciones;
+    private List<Cancion> listaCanciones;
     private int numTracks;
-    Api api;
+    private Api api;
     TextUI textui;
-
+    private String clientId = "";
+    private String clientSecret = "";
     public SpotifyProcessor(TextUI t) {
         listaCanciones = new ArrayList<>();
         int numTracks = 0;
         this.textui = t;
+        cargarApiKeys();
     }
-
+    private void cargarApiKeys(){
+        FileReader fr = null;
+        try {
+            ClassLoader classLoader = getClass().getClassLoader();
+            File archivo = new File(classLoader.getResource("YSAPI_KEYS.txt").getFile());
+            fr = new FileReader (archivo);
+            BufferedReader br = new BufferedReader(fr);
+            br.readLine();
+            this.clientId = br.readLine();
+            this.clientSecret = br.readLine();
+                    
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(YoutubeSearch.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(YoutubeSearch.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                fr.close();
+            } catch (IOException ex) {
+                Logger.getLogger(YoutubeSearch.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
     public void process(String url) throws UnsupportedEncodingException {
         //tenemos que decodear y encodear nombres de usuario por reasons
         
@@ -52,8 +83,8 @@ public class SpotifyProcessor {
 
         // Create an API instance. The default instance connects to https://api.spotify.com/.
         api = Api.builder()
-                .clientId("0f7de34ee8774ddeab2c1894434c5a01")
-                .clientSecret("6ab44cdc4aed44dc9ae0455a30118d17")
+                .clientId(clientId)
+                .clientSecret(clientSecret)
                 .redirectURI("https://www.spotify.com/es/")
                 .build();
         final ClientCredentialsGrantRequest request = api.clientCredentialsGrant().build();

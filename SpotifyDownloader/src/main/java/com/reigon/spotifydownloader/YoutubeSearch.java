@@ -15,10 +15,16 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.SearchResult;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -43,7 +49,7 @@ public class YoutubeSearch {
      * limit per page).
      */
     private static final long NUMBER_OF_VIDEOS_RETURNED = 25;
-    public static final String API_KEY = "AIzaSyCkQfDbMO7A7Dtq062uB6xtRRmWypDIrAw";
+    private static String API_KEY = "";
     /**
      * Global instance of Youtube object to make all API requests.
      */
@@ -52,9 +58,31 @@ public class YoutubeSearch {
 
     public YoutubeSearch(TextUI t) {
         listaCanciones = new ArrayList<>();
+        API_KEY = cargarApiKey();
         textui = t;
     }
-
+    private String cargarApiKey(){
+        String resultado = "";
+        FileReader fr = null;
+        try {
+            ClassLoader classLoader = getClass().getClassLoader();
+            File archivo = new File(classLoader.getResource("YSAPI_KEYS.txt").getFile());
+            fr = new FileReader (archivo);
+            BufferedReader br = new BufferedReader(fr);
+            resultado = br.readLine();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(YoutubeSearch.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(YoutubeSearch.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                fr.close();
+            } catch (IOException ex) {
+                Logger.getLogger(YoutubeSearch.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return resultado;
+    }
     public List<Cancion> process(List<Cancion> canciones) {
         YoutubeVideoInfo info = new YoutubeVideoInfo();
         for (Cancion track : canciones) {
