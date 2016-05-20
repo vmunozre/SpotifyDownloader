@@ -5,22 +5,12 @@
  */
 package com.reigon.spotifydownloader;
 
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.SettableFuture;
 import com.reigon.spotifydownloader.DownloadMP3.DownloadRequest;
-import com.wrapper.spotify.Api;
-import com.wrapper.spotify.methods.AlbumRequest;
-import com.wrapper.spotify.methods.PlaylistRequest;
-import com.wrapper.spotify.methods.PlaylistTracksRequest;
-import com.wrapper.spotify.methods.authentication.ClientCredentialsGrantRequest;
-import com.wrapper.spotify.models.Album;
-import com.wrapper.spotify.models.ClientCredentials;
-import com.wrapper.spotify.models.Page;
-import com.wrapper.spotify.models.Playlist;
-import com.wrapper.spotify.models.PlaylistTrack;
-import com.wrapper.spotify.models.SimpleArtist;
+
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +27,6 @@ import javax.swing.JFileChooser;
  * @author Reiner
  */
 public class Main {
-    
-    
 
     public static void main(String[] args) {
         ArrayList<Cancion> failedsongs = new ArrayList<Cancion>();
@@ -93,13 +81,37 @@ public class Main {
         textui.clearText();
         textui.printText("Estas son las canciones que no se han podido descargar automáticamente");
         textui.printText("puedes bajartelas manualmente utilizando el link en youtube-mp3.org");
-        textui.printText("Canciones fallidas: "+failedsongs.size());
+        textui.printText("Canciones fallidas: " + failedsongs.size());
+        FileWriter fi = null;
+
+        PrintWriter pw = null;
+
         
-        for (Cancion s : failedsongs){
-            textui.printText("Titulo de la canción: "+s.getNombre()+" - "+s.getArtistas().get(0));
-            textui.printText("Link de descarga: "+s.getUrl());
+        try {
+            fi = new FileWriter(path + "__error_log.txt");
+            pw = new PrintWriter(fi);
+            pw.println("Canciones fallidas: " + failedsongs.size());
+            pw.println();
+            for (Cancion s : failedsongs) {
+                textui.printText("Titulo de la canción: " + s.getNombre() + " - " + s.getArtistas().get(0));
+                textui.printText("Link de descarga: " + s.getUrl());
+
+                pw.println("Titulo de la canción: " + s.getNombre() + " - " + s.getArtistas().get(0));
+                pw.println("Link de descarga: " + s.getUrl());
+                pw.println("---------------------------------------------------------------");
+                pw.println();
+
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                fi.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-        
+
         textui.printText("Se ha terminado de descargar ------ Ya puede cerrar la aplicación ");
         Scanner in = new Scanner(System.in);
         String dameunrespirochicoqueterminasmuyrapido = in.nextLine();
