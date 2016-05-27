@@ -75,60 +75,29 @@ public class Main {
                 if (!cancion.getVideoID().isEmpty()) {
                     String nombreArchivo = (cancion.getNombre() + " - " + cancion.getArtistas().get(0)).replace("|", "").replace("/", "").replace(":", "").replace("*", "").replace("?", "").replace("<", "").replace(">", "");
                     //Comprobamos que no exista
-                    File src = new File(path + nombreArchivo + ".mp3");
+                    File src = new File(path + cancion.getNombre() + ".mp3");
                     if (!src.exists()) {
-                        service.submit(new DownloadRequest(cancion.getVideoID(), path,"0" + nombreArchivo, textui)).get();
+                        service.submit(new DownloadRequest(cancion.getVideoID(), path, nombreArchivo, textui)).get();
                         // the file we are going to modify
-                        File src2 = new File(path + "0" + nombreArchivo + ".mp3");
-                        if (src2.exists()) {
-                            //METADATOS
-                            Mp3File mp3file = new Mp3File(path + "0" + nombreArchivo + ".mp3");
-                            ID3v2 id3v2Tag;
-                           
-                            if (mp3file.hasId3v2Tag()) {
-                                id3v2Tag = mp3file.getId3v2Tag();
-                            } else {
-                                // mp3 does not have an ID3v2 tag, let's create one..
-                                id3v2Tag = new ID3v24Tag();
-                                
-                            }
-                            
-                            id3v2Tag.setTrack(String.valueOf(cancion.getNumCancion()));
-                            id3v2Tag.setArtist(cancion.getArtistas().get(0));
-                            id3v2Tag.setTitle(cancion.getNombre());
-                            id3v2Tag.setAlbum(cancion.getAlbum());
-
-                            id3v2Tag.setOriginalArtist(cancion.getArtistas().get(0));
-                            id3v2Tag.setAlbumArtist(cancion.getAlbum());
-
-                            id3v2Tag.setUrl(cancion.getUrl());
-                            
-                            mp3file.setId3v2Tag(id3v2Tag);
-                            mp3file.save(path + nombreArchivo + ".mp3");
-
-                            src2.delete();
-                            textui.printText("Metadatos añadidos a: " + src2.getName());
-                        }
-
+                        cancion.saveMetadata(path , nombreArchivo + ".mp3");
                     } else {
-                        System.out.println("REPE!");
+                        System.out.println("REPETIDA!");
+                        textui.printText("La canción "+ cancion.getNombre() +" Está repetida");
                     }
 
-                }
+                } 
+
             } catch (InterruptedException | ExecutionException ex) {
                 System.out.println("El video " + cancion.getUrl() + " No ha podido descargarse, por favor bajalo manualmente");
                 textui.printText("La canción " + cancion.getNombre() + " No ha podido descargarse, por favor, descargala manualmente");
                 failedsongs.add(cancion);
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (UnsupportedTagException ex) {
-                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InvalidDataException ex) {
-                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (NotSupportedException ex) {
+            } catch (IOException | UnsupportedTagException | InvalidDataException | NotSupportedException ex) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             }
+            //cancion.mostrarCancion();
+            //cancion.mostrarCancion();
+            
             //cancion.mostrarCancion();
 
             //cancion.mostrarCancion();
