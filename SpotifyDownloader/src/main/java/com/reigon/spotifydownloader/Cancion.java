@@ -18,16 +18,20 @@ public class Cancion {
     private final String album;
     private final int duracion;
     private final int UMBRAL = 40;
+    private final int numCancion;
+    private final int numDisc;
     
     private List<String> artistas;
     private String url;
     private String videoID;
     
-    public Cancion(String nombre, String album, int duracion) {
+    public Cancion(String nombre, String album, int duracion, int numCancion, int numDisc) {
         this.nombre = nombre;
         this.album = album;
         this.duracion = duracion/1000;   //SEGUNDOS
         this.artistas = new ArrayList<>();
+        this.numCancion = numCancion;
+        this.numDisc = numDisc;
         this.url = "";
         this.videoID = "";
     }
@@ -53,14 +57,31 @@ public class Cancion {
         return (((duracion-UMBRAL)<=duracionVideo) && (duracionVideo < (duracion+UMBRAL)));          
     }
     //Segundos
-    
+    public String getPrimerArtista(){
+        String res = "";
+        res += artistas.get(0);
+        
+        return res;
+    }
 
     public void addArtista(String artista) {
         artistas.add(artista);
     }
 
+    public int getDuracion() {
+        return duracion;
+    }
+
+    public int getNumCancion() {
+        return numCancion;
+    }
+
     public String getVideoID() {
         return videoID;
+    }
+
+    public int getNumDisc() {
+        return numDisc;
     }
 
     //GETTERS AND SETTERS
