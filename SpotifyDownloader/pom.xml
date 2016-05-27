@@ -12,19 +12,11 @@
     </properties>
 
     <dependencies>
+        
         <dependency>
-            <groupId>org.cmc.music</groupId>
-            <artifactId>MyId3</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/src/main/resources/myid3.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>org.cmc.music.common</groupId>
-            <artifactId>MyId3c</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/src/main/resources/myid3.jar</systemPath>
+            <groupId>com.mpatric</groupId>
+            <artifactId>mp3agic</artifactId>
+            <version>0.8.3</version>
         </dependency>
         <dependency>
             <groupId>se.michaelthelin.spotify</groupId>

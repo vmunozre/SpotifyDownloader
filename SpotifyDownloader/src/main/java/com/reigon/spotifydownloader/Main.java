@@ -5,6 +5,12 @@
  */
 package com.reigon.spotifydownloader;
 
+import com.mpatric.mp3agic.ID3v2;
+import com.mpatric.mp3agic.ID3v24Tag;
+import com.mpatric.mp3agic.InvalidDataException;
+import com.mpatric.mp3agic.Mp3File;
+import com.mpatric.mp3agic.NotSupportedException;
+import com.mpatric.mp3agic.UnsupportedTagException;
 import com.reigon.spotifydownloader.DownloadMP3.DownloadRequest;
 
 import java.io.File;
@@ -12,6 +18,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -21,12 +30,6 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
-
-import org.cmc.music.myid3.*;
-import org.cmc.music.common.*;
-import org.cmc.music.metadata.IMusicMetadata;
-import org.cmc.music.metadata.MusicMetadata;
-import org.cmc.music.metadata.MusicMetadataSet;
 
 /**
  *
@@ -74,25 +77,42 @@ public class Main {
                     //Comprobamos que no exista
                     File src = new File(path + nombreArchivo + ".mp3");
                     if (!src.exists()) {
-                        service.submit(new DownloadRequest(cancion.getVideoID(), path, nombreArchivo, textui)).get();
+                        service.submit(new DownloadRequest(cancion.getVideoID(), path,"0" + nombreArchivo, textui)).get();
                         // the file we are going to modify
-                        if (src.exists()) {
+                        File src2 = new File(path + "0" + nombreArchivo + ".mp3");
+                        if (src2.exists()) {
                             //METADATOS
-                            /*MusicMetadataSet src_set = new MyID3().read(src); // read metadata
-                            IMusicMetadata metadata = src_set.getSimplified();
-                            metadata.setAlbum(cancion.getAlbum());
-                            metadata.setArtist(cancion.getArtistas().get(0));
-                            metadata.setDiscNumber(cancion.getNumDisc());
-                            metadata.setSongTitle(cancion.getNombre());
-                            metadata.setTrackCount(cancion.getNumCancion());
-                            File dst = new File(path + nombreArchivo + ".mp3");
-                            new MyID3().write(src, dst, src_set, metadata);*/
+                            Mp3File mp3file = new Mp3File(path + "0" + nombreArchivo + ".mp3");
+                            ID3v2 id3v2Tag;
+                           
+                            if (mp3file.hasId3v2Tag()) {
+                                id3v2Tag = mp3file.getId3v2Tag();
+                            } else {
+                                // mp3 does not have an ID3v2 tag, let's create one..
+                                id3v2Tag = new ID3v24Tag();
+                                
+                            }
+                            
+                            id3v2Tag.setTrack(String.valueOf(cancion.getNumCancion()));
+                            id3v2Tag.setArtist(cancion.getArtistas().get(0));
+                            id3v2Tag.setTitle(cancion.getNombre());
+                            id3v2Tag.setAlbum(cancion.getAlbum());
+
+                            id3v2Tag.setOriginalArtist(cancion.getArtistas().get(0));
+                            id3v2Tag.setAlbumArtist(cancion.getAlbum());
+
+                            id3v2Tag.setUrl(cancion.getUrl());
+                            
+                            mp3file.setId3v2Tag(id3v2Tag);
+                            mp3file.save(path + nombreArchivo + ".mp3");
+
+                            src2.delete();
+                            textui.printText("Metadatos añadidos a: " + src2.getName());
                         }
 
-                    }else{
+                    } else {
                         System.out.println("REPE!");
                     }
-                    
 
                 }
             } catch (InterruptedException | ExecutionException ex) {
@@ -100,13 +120,15 @@ public class Main {
                 textui.printText("La canción " + cancion.getNombre() + " No ha podido descargarse, por favor, descargala manualmente");
                 failedsongs.add(cancion);
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-            /*} catch (IOException ex) {
+            } catch (IOException ex) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ID3ReadException ex) {
+            } catch (UnsupportedTagException ex) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ID3WriteException ex) {
+            } catch (InvalidDataException ex) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-            */}
+            } catch (NotSupportedException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            }
             //cancion.mostrarCancion();
 
             //cancion.mostrarCancion();
