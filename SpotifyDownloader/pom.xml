@@ -10,7 +10,22 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
+
     <dependencies>
+        <dependency>
+            <groupId>org.cmc.music</groupId>
+            <artifactId>MyId3</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/src/main/resources/myid3.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.cmc.music.common</groupId>
+            <artifactId>MyId3c</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/src/main/resources/myid3.jar</systemPath>
+        </dependency>
         <dependency>
             <groupId>se.michaelthelin.spotify</groupId>
             <artifactId>spotify-web-api-java</artifactId>
@@ -31,7 +46,7 @@
             <artifactId>gson</artifactId>
             <version>2.4</version>
         </dependency>
-
+       
     </dependencies>
     <build>
         <plugins>

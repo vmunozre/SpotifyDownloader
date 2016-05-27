@@ -22,6 +22,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 
+import org.cmc.music.myid3.*;
+import org.cmc.music.common.*;
+import org.cmc.music.metadata.IMusicMetadata;
+import org.cmc.music.metadata.MusicMetadata;
+import org.cmc.music.metadata.MusicMetadataSet;
+
 /**
  *
  * @author Reiner
@@ -65,14 +71,42 @@ public class Main {
             try {
                 if (!cancion.getVideoID().isEmpty()) {
                     String nombreArchivo = (cancion.getNombre() + " - " + cancion.getArtistas().get(0)).replace("|", "").replace("/", "").replace(":", "").replace("*", "").replace("?", "").replace("<", "").replace(">", "");
-                    service.submit(new DownloadRequest(cancion.getVideoID(), path, nombreArchivo, textui)).get();
+                    //Comprobamos que no exista
+                    File src = new File(path + nombreArchivo + ".mp3");
+                    if (!src.exists()) {
+                        service.submit(new DownloadRequest(cancion.getVideoID(), path, nombreArchivo, textui)).get();
+                        // the file we are going to modify
+                        if (src.exists()) {
+                            //METADATOS
+                            /*MusicMetadataSet src_set = new MyID3().read(src); // read metadata
+                            IMusicMetadata metadata = src_set.getSimplified();
+                            metadata.setAlbum(cancion.getAlbum());
+                            metadata.setArtist(cancion.getArtistas().get(0));
+                            metadata.setDiscNumber(cancion.getNumDisc());
+                            metadata.setSongTitle(cancion.getNombre());
+                            metadata.setTrackCount(cancion.getNumCancion());
+                            File dst = new File(path + nombreArchivo + ".mp3");
+                            new MyID3().write(src, dst, src_set, metadata);*/
+                        }
+
+                    }else{
+                        System.out.println("REPE!");
+                    }
+                    
+
                 }
             } catch (InterruptedException | ExecutionException ex) {
                 System.out.println("El video " + cancion.getUrl() + " No ha podido descargarse, por favor bajalo manualmente");
                 textui.printText("La canción " + cancion.getNombre() + " No ha podido descargarse, por favor, descargala manualmente");
                 failedsongs.add(cancion);
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            /*} catch (IOException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ID3ReadException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ID3WriteException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            */}
             //cancion.mostrarCancion();
 
             //cancion.mostrarCancion();
@@ -86,7 +120,6 @@ public class Main {
 
         PrintWriter pw = null;
 
-        
         try {
             fi = new FileWriter(path + "__error_log.txt");
             pw = new PrintWriter(fi);

@@ -139,10 +139,14 @@ public class SpotifyProcessor {
             for (PlaylistTrack playlistTrack : playlistTracks) {
                 String nombre = playlistTrack.getTrack().getName();
                 String album = playlistTrack.getTrack().getAlbum().getName();
+                
+                int trackNum = playlistTrack.getTrack().getTrackNumber();
+                int discNum = playlistTrack.getTrack().getDiscNumber();
                 int duracion = playlistTrack.getTrack().getDuration();
+                
                 textui.printText("Canción: " + nombre + " - Album: " + album + " AÑADIDA A LA BUSQUEDA!");
                 //System.out.println("Cancion: " + nombre +" - Duracion: " + duracion);
-                Cancion track = new Cancion(nombre, album, duracion);
+                Cancion track = new Cancion(nombre, album, duracion, trackNum, discNum);
 
                 List<SimpleArtist> artistas = playlistTrack.getTrack().getArtists();
 
