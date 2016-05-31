@@ -19,10 +19,7 @@
  */
 package com.reigon.spotifydownloader;
 
-import com.mpatric.mp3agic.ID3v2;
-import com.mpatric.mp3agic.ID3v24Tag;
 import com.mpatric.mp3agic.InvalidDataException;
-import com.mpatric.mp3agic.Mp3File;
 import com.mpatric.mp3agic.NotSupportedException;
 import com.mpatric.mp3agic.UnsupportedTagException;
 import com.reigon.spotifydownloader.DownloadMP3.DownloadRequest;
@@ -32,9 +29,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -51,21 +45,27 @@ import javax.swing.JFileChooser;
 public class Main {
 
     public static void main(String[] args) {
+        
         ArrayList<Cancion> failedsongs = new ArrayList<Cancion>();
-        //url: https://open.spotify.com/user/reiner13/playlist/2plTFnZFDDIhyhGIGy377e
-        //Url Prompt
+        
+        //Input URL playlist
         UrlInputDialog input = new UrlInputDialog(new javax.swing.JFrame(), true);
         input.setVisible(true);
         String url = input.getUrl();
+        
+        //Selecctor de carpeta
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         fileChooser.showOpenDialog(null);
         String path = fileChooser.getSelectedFile().getAbsolutePath() + File.separator;
         System.out.println("Path: " + path);
+        
+        //Interfaz de progreso
         TextUI textui = new TextUI();
         textui.setVisible(true);
         textui.printText("Recuperando lista de Spotify");
-
+        
+        //Sacamos datos de la playlist de spotify usando su API
         SpotifyProcessor spoti = new SpotifyProcessor(textui);
 
         try {
@@ -74,10 +74,14 @@ public class Main {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
         textui.clearText();
+        
+        //Buscamos en Youtube las canciones
         textui.printText("Buscando Canciones");
         YoutubeSearch yout = new YoutubeSearch(textui);
         List<Cancion> canciones;
         canciones = yout.process(spoti.getListaCanciones());
+        
+        //Procedemos a descargar las canciones
         ExecutorService service = Executors.newFixedThreadPool(5);
         textui.clearText();
         textui.printText("Descargando Canciones");
@@ -108,12 +112,6 @@ public class Main {
             } catch (IOException | UnsupportedTagException | InvalidDataException | NotSupportedException ex) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             }
-            //cancion.mostrarCancion();
-            //cancion.mostrarCancion();
-            
-            //cancion.mostrarCancion();
-
-            //cancion.mostrarCancion();
         }
         service.shutdown();
         textui.clearText();
@@ -123,7 +121,8 @@ public class Main {
         FileWriter fi = null;
 
         PrintWriter pw = null;
-
+        
+        //Guardamos en un fichero error_log.txt las canciones que han fallado.
         try {
             fi = new FileWriter(path + "__error_log.txt");
             pw = new PrintWriter(fi);
@@ -151,7 +150,7 @@ public class Main {
 
         textui.printText("Se ha terminado de descargar ------ Ya puede cerrar la aplicación ");
         Scanner in = new Scanner(System.in);
-        String dameunrespirochicoqueterminasmuyrapido = in.nextLine();
+        String end = in.nextLine();
         System.exit(0);
     }
 }
