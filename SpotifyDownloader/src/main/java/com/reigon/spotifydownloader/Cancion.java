@@ -18,7 +18,6 @@
     You should have received a copy of the GNU General Public License
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.reigon.spotifydownloader;
 
 import com.mpatric.mp3agic.ID3v1;
@@ -48,6 +47,7 @@ public class Cancion {
     private String url;
     private String videoID;
 
+    //CONSTRUCTOR
     public Cancion(String nombre, String album, int duracion, int numCancion, int numDisc) {
         this.nombre = nombre;
         this.album = album;
@@ -59,6 +59,7 @@ public class Cancion {
         this.videoID = "";
     }
 
+    //FUNCIONES GENERALES
     public String getQuery() {
         String query = nombre + " ";
         if (!artistas.isEmpty()) {
@@ -79,59 +80,6 @@ public class Cancion {
 
     public boolean duracionAceptable(int duracionVideo) {
         return (((duracion - UMBRAL) <= duracionVideo) && (duracionVideo < (duracion + UMBRAL)));
-    }
-
-    //Segundos
-    public String getPrimerArtista() {
-        String res = "";
-        res += artistas.get(0);
-
-        return res;
-    }
-
-    public void addArtista(String artista) {
-        artistas.add(artista);
-    }
-
-    public int getDuracion() {
-        return duracion;
-    }
-
-    public int getNumCancion() {
-        return numCancion;
-    }
-
-    public String getVideoID() {
-        return videoID;
-    }
-
-    public int getNumDisc() {
-        return numDisc;
-    }
-
-    //GETTERS AND SETTERS
-    public void setVideoID(String videoID) {
-        this.videoID = videoID;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public String getAlbum() {
-        return album;
-    }
-
-    public List<String> getArtistas() {
-        return artistas;
     }
 
     public void mostrarCancion() {
@@ -162,11 +110,63 @@ public class Cancion {
         id3v1Tag.setArtist(this.getPrimerArtista());
         id3v1Tag.setTitle(this.getNombre());
         id3v1Tag.setAlbum(this.getAlbum());
-       
-        mp3file.save(path + this.getNombre()+ ".mp3");
-        File basura = new File (path + filename);
+
+        mp3file.save(path + this.getNombre() + ".mp3");
+        File basura = new File(path + filename);
         basura.delete();
 
+    }
+
+    //GETTERS AND SETTERS, ETC
+    public String getPrimerArtista() {
+        String res = "";
+        res += artistas.get(0);
+
+        return res;
+    }
+
+    public void addArtista(String artista) {
+        artistas.add(artista);
+    }
+
+    public int getDuracion() {
+        return duracion;
+    }
+
+    public int getNumCancion() {
+        return numCancion;
+    }
+
+    public String getVideoID() {
+        return videoID;
+    }
+
+    public int getNumDisc() {
+        return numDisc;
+    }
+
+    public void setVideoID(String videoID) {
+        this.videoID = videoID;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public String getAlbum() {
+        return album;
+    }
+
+    public List<String> getArtistas() {
+        return artistas;
     }
 
 }
