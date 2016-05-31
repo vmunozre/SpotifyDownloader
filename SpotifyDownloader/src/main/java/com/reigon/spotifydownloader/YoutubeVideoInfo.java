@@ -21,11 +21,8 @@ package com.reigon.spotifydownloader;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import static com.reigon.spotifydownloader.DownloadMP3.DownloadRequest.YOUTUBE_MP3;
 import com.reigon.spotifydownloader.DownloadMP3.URLBuilder;
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -44,7 +41,7 @@ public class YoutubeVideoInfo {
     public YoutubeVideoInfo() {
 
     }
-
+    //Sacamos la duración de un video
     public int getLongitudVideo(String videoId, String apiKey) {
         //https://www.googleapis.com/youtube/v3/videos?id=5hzgS9s-tE8&key=YOUR_API_KEY&part=snippet,contentDetails,statistics,status
         URLBuilder lookup_builder = new URLBuilder("/youtube/v3/videos").addParameter("id", videoId).addParameter("key", apiKey).addParameter("part", "contentDetails");
@@ -69,11 +66,11 @@ public class YoutubeVideoInfo {
         ArrayList aux = (ArrayList) response.get("items");
         Map<String, Object> aux2 = (Map) aux.get(0);
         Map<String, Object> aux3 = (Map) aux2.get("contentDetails");
-        //System.out.println(this.getDuration(aux3.get("duration").toString()));
+        
 
         return (int) getDuration(aux3.get("duration").toString());
     }
-
+    //Parseamos la duracion a segundos
     public long getDuration(String t) {
         String time = t.substring(2);
         long duration = 0L;
