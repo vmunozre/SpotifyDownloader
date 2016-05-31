@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-<title>Home - SpotifyDownloader</title>
+<title>Codigo - SpotifyDownloader</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
@@ -55,41 +55,44 @@
     </div>
 
     <!-- Header -->
-    <div class="w3-container w3-light-green w3-center w3-padding-128">
-        <h1 class="w3-margin w3-jumbo">SpotifyDownloader</h1>
+    <div class="w3-container w3-light-green w3-center w3-padding-64">
+        <h1 class="w3-margin w3-jumbo">Código</h1>
         <p class="w3-xlarge">Victor Reiner & Gonzalo Ruanes</p>
-<button class="w3-btn w3-padding-16 w3-large w3-margin-top">¡Descargar!</button>
+
     </div>
 
     <!-- First Grid -->
     <div class="w3-row-padding w3-padding-64 w3-container">
         <div class="w3-content">
             <div class="w3-twothird">
-                <h1>Descripción</h1>
-                <h5 class="w3-padding-32">SpotifyDownloader es un proyecto realizado por Victor Reiner y Gonzalo Ruanes con objetivo didáctico de aprender a usar las APIs de Youtube y Spotify. Por ello no nos hacemos responsables de su uso indebido.</h5>
+                <h1>Explicación</h1>
+                <h5 class="w3-padding-32">Nuestro primero objetivo era descargar las canciones directamente de Spotify, pero esto lo descartamos rápidamente debido a su dificultado. Por lo tanto, decidimos descargar la música de youtube, y así poder aprender un poco sobre su API.</h5>
+                <h5 class="w3-padding-32">Por lo tanto, nuestra aplicación recoge los datos de las canciones de Spotify, haciendo uso de su API. Busca en Youtube dichas canciones, con un criterio de selección bastante riguroso que se explicará más adelante, y las descarga a través de la página <a href="http://www.youtube-mp3.org/es">youtube-mp3</a>.</h5>
+                <h5 class="w3-padding-32">El código está disponible para todo el mundo en nuestro repositorio de <a href="https://github.com/vmunozre/SpotifyDownloader">GitHub</a>. ¡Siéntete libre de hacer un Fork y colaborar!</h5>
 
-                <p class="w3-text-grey">Spotify Downloader tiene como función descarga las canciones de las listas de reproducción de Spotify con la máxima exactitud posible. Para ello hace uso de youtube a la hora de encontrar y descargar las canciones. Más información sobre la explicación del código <a>aquí...</a> </p>
             </div>
 
-            <div class="w3-third w3-center">
-                <i class="fa fa-coffee w3-padding-64 w3-text-light-green"></i>
-            </div>
+
         </div>
     </div>
 
     <!-- Second Grid -->
     <div class="w3-row-padding w3-light-grey w3-padding-64 w3-container">
         <div class="w3-content">
-            <div class="w3-third w3-center">
-                <i class="fa fa-anchor w3-padding-64 w3-text-light-green w3-margin-right"></i>
-            </div>
+
 
             <div class="w3-twothird">
-                <h1>Código</h1>
-                <h5 class="w3-padding-32">¡Al ser un proyecto con objetivo didáctico nada nos hace más ilusión que ayudar a otras personas con sus proyectos! ¡Por ello todo el código es totalmente public y está a la disposición de cualquiera!</h5>
+                <h1>Criterio de Selección</h1>
+                <h5 class="w3-padding-32">Nuestro criterio de selección a la hora de elegir que video de youtube descargar se divide en dos partes:
+                <ul>
+                    
+                    <li>La primera es la propia "Query" de busqueda, incluye el nombre de la canción, álbum y artista. Si en una primera búsqueda no se encuentra ningún resultado se realiza una segunda menos restrictiva.</li>
+                    <li>La segunda es la duración de la canción de spotify comparada con la duración de video de youtube. Ponemos un margen de aceptación de unos segundos, y de esta manera evitamos descargar cds completos, etc.</li>
+                    </ul>
+                </h5>
 
-                <p class="w3-text-grey">¡Si tenéis cualquier sugerencia o detectáis algún error (Bug) grave dentro de nuestro código no dudéis en hacer un fork para colaborar!  o poneros en contacto con nosotros a través de reigonsoft@gmail.com</p>
-                <p class="w3-text-grey">¡Por último, dejamos a vuestra disposición un botón de dóname! ¡Aclarar que todos los donativos realizados en esta página irán destinados a otros proyectos de código abierto con objetivos didácticos!</p>
+
+
             </div>
         </div>
     </div>
@@ -103,10 +106,10 @@
         <div class="w3-xlarge w3-padding-32">
 
             <a href="https://github.com/vmunozre/SpotifyDownloader" class="w3-hover-text-red w3-show-inline-block"><i class="fa fa-github-alt"></i></a>
-            
-            
+
+
         </div>
-        <p>SpotifyDownloader  Copyright (C) 2016 Victor_Reiner & Gonzalo Ruanes</p>
+        <p>SpotifyDownloader Copyright (C) 2016 Victor_Reiner & Gonzalo Ruanes</p>
     </footer>
 
     <script>
