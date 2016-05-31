@@ -30,18 +30,14 @@ import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.SearchResult;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 /*
  * @author Victor_Reiner_&_Gonzalo_Ruanes
@@ -76,16 +72,13 @@ public class YoutubeSearch {
         API_KEY = cargarApiKey();
         textui = t;
     }
+    //Cargamos la ApiKey
     private String cargarApiKey(){
         String resultado = "";
         FileReader fr = null;
         try {
             InputStream in = getClass().getResourceAsStream("/YSAPI_KEYS.txt"); 
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
-            //ClassLoader classLoader = getClass().getClassLoader();
-            //File archivo = new File(classLoader.getResource("YSAPI_KEYS.txt").getFile());
-            //fr = new FileReader (archivo);
-            //BufferedReader br = new BufferedReader(fr);
             resultado = br.readLine();
         } catch (Exception ex) {
             Logger.getLogger(YoutubeSearch.class.getName()).log(Level.SEVERE, null, ex);
@@ -96,11 +89,7 @@ public class YoutubeSearch {
         YoutubeVideoInfo info = new YoutubeVideoInfo();
         for (Cancion track : canciones) {
             try {
-                /*
-                 * The YouTube object is used to make all API requests. The last argument is required, but
-                 * because we don't need anything initialized when the HttpRequest is initialized, we override
-                 * the interface and provide a no-op function.
-                 */
+                
                 youtube = new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY, new HttpRequestInitializer() {
                     public void initialize(HttpRequest request) throws IOException {
                     }
@@ -125,25 +114,17 @@ public class YoutubeSearch {
                 List<SearchResult> searchResultList = searchResponse.getItems();
 
                 if (!searchResultList.isEmpty()) {
-                    //Aqui iria el codigo de una segunda búsqueda mas abierta
-
-                    /*List<SearchResult> filtered = searchResultList.stream()
-                                                    .filter(vi -> vi.getSnippet().getTitle().contains("lyrics"))
-                                                    .collect(Collectors.toList());*/
-                   // track.setUrl("https://www.youtube.com/watch?v=" + searchResultList.get(0).getId().getVideoId());
-                    //track.setVideoID(searchResultList.get(0).getId().getVideoId());
-                    
-                    
+                    //Busca una canción de la busqueda que adapte su duracion a la cancion en spotify    
                     for(int i = 0; i <= searchResultList.size()-1; i++){
-                        if(track.duracionAceptable(info.getLongitudVideo(searchResultList.get(i).getId().getVideoId(), API_KEY))){
-                            
                         
+                        if(track.duracionAceptable(info.getLongitudVideo(searchResultList.get(i).getId().getVideoId(), API_KEY))){                                            
                             track.setUrl("https://www.youtube.com/watch?v=" + searchResultList.get(i).getId().getVideoId());
                             track.setVideoID(searchResultList.get(i).getId().getVideoId());
                             textui.printText("Pista Encontrada: "+ track.getNombre() + ", ID: " + track.getVideoID());
                             break;
                         }
                     }
+                    //Si no encuentra la primera vez hace una busqueda menos restrictiva
                     if(track.getUrl().equals("")){
                         System.out.println("La pista " + track.getQuery() + " no se ha encontrado, buscando de forma mas general");
                         textui.printText("La pista " + track.getQuery() + " no se ha encontrado, buscando de forma mas general");
@@ -153,8 +134,7 @@ public class YoutubeSearch {
                         searchResultList = searchResponse.getItems();
 
                         if (!searchResultList.isEmpty()) {
-                            //Aqui iria el codigo de una segunda búsqueda mas abierta
-
+                            //Busca una canción de la busqueda que adapte su duracion a la cancion en spotify    
                             for(int i = 0; i <= searchResultList.size()-1; i++){
                                 if(track.duracionAceptable(info.getLongitudVideo(searchResultList.get(i).getId().getVideoId(), API_KEY))){
                                     track.setUrl("https://www.youtube.com/watch?v=" + searchResultList.get(i).getId().getVideoId());
@@ -185,7 +165,7 @@ public class YoutubeSearch {
 
                     if (!searchResultList.isEmpty()) {
                         //Aqui iria el codigo de una segunda búsqueda mas abierta
-
+                        //Busca una canción de la busqueda que adapte su duracion a la cancion en spotify    
                         for(int i = 0; i <= searchResultList.size()-1; i++){
                             if(track.duracionAceptable(info.getLongitudVideo(searchResultList.get(i).getId().getVideoId(), API_KEY))){
                                 track.setUrl("https://www.youtube.com/watch?v=" + searchResultList.get(i).getId().getVideoId());
