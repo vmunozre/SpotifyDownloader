@@ -97,7 +97,7 @@ public class Main {
                         service.submit(new DownloadRequest(cancion.getVideoID(), path, nombreArchivo, textui)).get();
                         try {
                             // the file we are going to modify
-                            cancion.saveMetadata(path , nombreArchivo + ".mp3");
+                            cancion.saveMetadata(path , nombreArchivo);
                         } catch (UnsupportedTagException ex) {
                             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
                         } catch (InvalidDataException ex) {

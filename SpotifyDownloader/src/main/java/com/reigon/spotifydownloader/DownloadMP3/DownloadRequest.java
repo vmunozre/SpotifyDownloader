@@ -128,7 +128,7 @@ public class DownloadRequest implements Callable<File> {
 		 * Create the mp3 file and download it to the correct folder.
 		 */
                 
-		File file = new File(this.path + this.nombreCancion + ".mp3");
+		File file = new File(this.path + this.nombreCancion);
 		logger.info("downloading file {} from {}", file.getAbsolutePath(), connection.getURL());
 		try (RandomAccessFile local = new RandomAccessFile(file, "rw")) {
 			local.getChannel().transferFrom(remote, 0, Integer.MAX_VALUE);

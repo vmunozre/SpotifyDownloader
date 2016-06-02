@@ -107,11 +107,26 @@ public class Cancion {
             id3v1Tag = new ID3v1Tag();
             mp3file.setId3v1Tag(id3v1Tag);
         }
-        id3v1Tag.setArtist(this.getPrimerArtista());
-        id3v1Tag.setTitle(this.getNombre());
-        id3v1Tag.setAlbum(this.getAlbum());
+        if(this.getPrimerArtista().length() > 28){
+            id3v1Tag.setArtist(this.getPrimerArtista().substring(0, 28));
+        }else{
+            id3v1Tag.setArtist(this.getPrimerArtista());
+        }
+        
+        if(this.getNombre().length() > 28){
+            id3v1Tag.setTitle(this.getNombre().substring(0, 28));
+        }else{
+            id3v1Tag.setTitle(this.getNombre());
+        }
+        
+        if(this.getAlbum().length() > 28){
+            id3v1Tag.setAlbum(this.getAlbum().substring(0, 28));
+        }else{
+            id3v1Tag.setAlbum(this.getAlbum());
+        }
+        
 
-        mp3file.save(path + this.getNombre() + ".mp3");
+        mp3file.save(path + Utils.cleanString(this.getNombre()) + ".mp3");
         File basura = new File(path + filename);
         basura.delete();
 
