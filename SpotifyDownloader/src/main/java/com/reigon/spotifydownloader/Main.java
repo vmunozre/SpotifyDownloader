@@ -74,7 +74,7 @@ public class Main {
                     service.submit(new DownloadRequest(cancion.getVideoID(),"./downloads/",nombreArchivo,textui)).get();
                 }
             } catch (InterruptedException | ExecutionException ex) {
-                System.out.println("El video "+ cancion.getUrl() + " No ha podido descargarse, por favor bajalo manualmente");
+                System.out.println("La canción "+ cancion.getNombre() + " No ha podido descargarse, por favor bajala manualmente");
                 //Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             }
             //cancion.mostrarCancion();
