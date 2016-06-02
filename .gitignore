@@ -1,3 +1,4 @@
 /SpotifyDownloader/target/
 /SpotifyDownloader/downloads/
-/SpotifyDownloader/nb-configuration.xml
+/SpotifyDownloader/nb-configuration.xml//SpotifyDownloader/src/main/resources/YSAPI_KEYS.txt/
+SpotifyDownloader/src/main/resources/YSAPI_KEYS.txt

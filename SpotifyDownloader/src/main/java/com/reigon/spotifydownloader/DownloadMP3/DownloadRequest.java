@@ -1,3 +1,22 @@
+/*
+    Licencia:
+    «Copyright 2016 ReiGon - Victor Reiner & Gonzalo Ruanes»
+
+    This file is part of SpotifyDownloader.
+
+    SpotifyDownloader is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    SpotifyDownloader is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.reigon.spotifydownloader.DownloadMP3;
 
 import java.io.File;
@@ -20,7 +39,9 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.reigon.spotifydownloader.TextUI;
-
+/*
+ * @author Victor_Reiner_&_Gonzalo_Ruanes
+ */
 public class DownloadRequest implements Callable<File> {
 	
 	/**
@@ -113,9 +134,12 @@ public class DownloadRequest implements Callable<File> {
 			local.getChannel().transferFrom(remote, 0, Integer.MAX_VALUE);
 			local.close();
 			logger.info("download complete of: " + response.get("title"));
+                        textui.printText("Descargada: " + this.nombreCancion);
 			return file;
 		} catch (Exception ex) {
 			logger.warn("could not download video, removing file...");
+                        Scanner in = new Scanner(System.in);
+                        String enlace = in.nextLine();
 			file.delete();
 			throw new IOException(ex);
 		}
