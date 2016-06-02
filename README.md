@@ -1,15 +1,11 @@
 # SpotifyDownloader
 
-#Tareas
+SpotifyDownloader es un proyecto realizado por Victor Reiner y Gonzalo Ruanes con objetivo didáctico de aprender a usar las APIs de Youtube y Spotify. Por ello no nos hacemos responsables de su uso indebido.
 
-* Algunos fallos al buscar las canciones en youtube (creo que dan cuando no encuentra ningun video relacionado con la query que se le pasa).
-* Asegurarse de que el url que se le pasa es de una playlist de spotify.
-* Mejorar la query de busqueda en youtube.
-* Cambiar las APIKeys de prueba por unas de verdad.
-* Añadir interfaz gráfica.
-* Mejorar la eficiencia añadiendo Concurrencia a las descargas de las canciones.
-* Refactorizar el código, sobre todo en cuanto a comentarios, nombres de variables, métodos, etc.
-* Descargar las canciones.
+Spotify Downloader tiene como función la descarga de las canciones de las listas de reproducción de Spotify con la máxima exactitud posible. Para ello hace uso de youtube a la hora de encontrar y descargar las canciones. Más información sobre la explicación del código aquí...
+
+(http://vmunozre.github.io/SpotifyDownloader/)
+
 
 
 #Autores:
