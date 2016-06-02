@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
 <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
 <style>
     body,
     h1,
@@ -47,7 +47,7 @@
     <!-- Navbar on small screens -->
     <div id="navDemo" class="w3-hide w3-hide-large w3-hide-medium w3-top" style="margin-top:51px">
         <ul class="w3-navbar w3-left-align w3-large w3-black">
-            <li><a class="w3-padding-large" href="/SpotifyDownloader/descargar.html">Descargar</a></li>
+            <li><a class="w3-padding-large" href="/SpotifyDownloader/">Home</a></li>
             <li><a class="w3-padding-large" href="/SpotifyDownloader/codigo.html">Código</a></li>
             <li><a class="w3-padding-large" href="/SpotifyDownloader/about.html">About</a></li>
 
@@ -66,11 +66,14 @@
         <div class="w3-content">
             <div class="w3-twothird">
                 <h1>Ultima Versión</h1>
-                <h5 class="w3-padding-32"><a href="https://mega.nz/#!wYp1haoD!Fi6pwLDqkw8n1kIL5fGWGPOarpa-GUncwKBsO5A8Ybc">Versión: Beta 2.0 - MEGA</a></h5>
+                <h5 class="w3-padding-32">
+                    <a href="https://mega.nz#!MAAmDALa!DhSPvMrQgWWtaZE6CqLyQdO4xN99QOp6Wyjgjyy5y5E">Versión: Beta 3.0 - MEGA</a>
+                    <p class="w3-text-grey">¡Versión Estable! Problemas con los metadatos solucionado, tasa de exito de un 75% o superior.</p>
+                </h5>
 
                 <p class="w3-text-grey">Esta aplicación ha sido realizada con motivos didacticos, no nos hacemos responsable de su uso.</p>
             </div>
-            
+
             <div class="w3-third w3-center">
                 <i class="fa fa-arrow-down w3-padding-64 fa-5x w3-text-light-green"></i>
             </div>
@@ -86,22 +89,59 @@
 
             <div class="w3-twothird">
                 <h1>Versiones anteriores</h1>
-                <h5 class="w3-padding-32"><a href="https://mega.nz/#!wYp1haoD!Fi6pwLDqkw8n1kIL5fGWGPOarpa-GUncwKBsO5A8Ybc">Versión: Beta 2.0 - MEGA</a></h5>
+                <h5 class="">
+                    <a href="https://mega.nz#!MAAmDALa!DhSPvMrQgWWtaZE6CqLyQdO4xN99QOp6Wyjgjyy5y5E">Versión: Beta 3.0 - MEGA</a>
+                    <p class="w3-text-grey">¡Versión Estable! Problemas con los metadatos solucionado, tasa de exito de un 75% o superior.</p>
+                </h5>
+                <h5 class="">
+                    <a href="https://mega.nz/#!wYp1haoD!Fi6pwLDqkw8n1kIL5fGWGPOarpa-GUncwKBsO5A8Ybc">Versión: Beta 2.0 - MEGA</a>
+                    <p class="w3-text-grey">Versión base, problemas aun con los metadatos.</p>
+                </h5>
 
-                
-                
+
+
             </div>
         </div>
     </div>
 
-    <div class="w3-container w3-black w3-center w3-opacity w3-padding-64">
-        <h1 class="w3-margin w3-xlarge"><form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-<input type="hidden" name="cmd" value="_s-xclick">
-<input type="hidden" name="hosted_button_id" value="9NKNUL2E2NYS6">
-<input type="image" src="https://www.paypalobjects.com/es_ES/ES/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal, la forma más segura y rápida de pagar en línea.">
-<img alt="" border="0" src="https://www.paypalobjects.com/es_ES/i/scr/pixel.gif" width="1" height="1">
-</form>
-</h1>
+    <div class="w3-container w3-black w3-center w3-opacity w3-padding-32">
+
+        <h5>PUEDES DONARNOS AQUI</h5>
+        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+            <input type="hidden" name="cmd" value="_s-xclick">
+            <input type="hidden" name="hosted_button_id" value="9NKNUL2E2NYS6">
+            <input type="image" src="https://www.paypalobjects.com/es_ES/ES/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal, la forma más segura y rápida de pagar en línea.">
+            <img alt="" border="0" src="https://www.paypalobjects.com/es_ES/i/scr/pixel.gif" width="1" height="1">
+        </form>
+
+        <p></p>
+        <button class="w3-btn w3-hover-light-grey w3-border" onClick="document.getElementById('id01').style.display='block'"><i class="fa fa-btc fa-4x"></i></button>
+
+
+
+    </div>
+
+    </div>
+    <div id="id01" class="w3-modal w3-center">
+        <div class="w3-modal-content w3-card-8">
+            <header class="w3-container w3-teal">
+                <span onclick="document.getElementById('id01').style.display='none'" class="w3-closebtn">&times;</span>
+                <h2>También puedes Donar por BitCoins</h2>
+            </header>
+            <div class="w3-container">
+                <div class="w3-border">
+                    <p><b>DIRECCIÓN</b></p>
+                    <p>1FoS7FFrTPcxp7CuBjDaH7unYzkxotgWxw</p>
+                </div>
+                <p></p>
+                <div class="w3-border">
+                    <p><b>QR</b></p>
+                    <p><img src="./media/qrbtc.png" class="w3-round" alt="QR BTC"></p>
+                </div>
+
+            </div>
+
+        </div>
     </div>
 
     <!-- Footer -->
@@ -109,10 +149,10 @@
         <div class="w3-xlarge w3-padding-32">
 
             <a href="https://github.com/vmunozre/SpotifyDownloader" class="w3-hover-text-red w3-show-inline-block"><i class="fa fa-github-alt"></i></a>
-            
-            
+
+
         </div>
-        <p>SpotifyDownloader  Copyright (C) 2016 Victor_Reiner & Gonzalo Ruanes</p>
+        <p>SpotifyDownloader Copyright (C) 2016 Victor_Reiner & Gonzalo Ruanes</p>
     </footer>
 
     <script>
