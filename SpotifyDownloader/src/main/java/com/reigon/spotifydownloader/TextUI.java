@@ -19,6 +19,8 @@
  */
 package com.reigon.spotifydownloader;
 
+import java.awt.Color;
+
 /*
  * @author Victor_Reiner_&_Gonzalo_Ruanes
  */
@@ -45,6 +47,11 @@ public class TextUI extends javax.swing.JFrame {
         jTextArea1 = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Descargando canciones...");
+        setBackground(new java.awt.Color(0, 204, 0));
+        setBounds(new java.awt.Rectangle(0, 0, 0, 0));
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        setForeground(new java.awt.Color(0, 204, 51));
 
         jLabel1.setText("Descargando....");
 

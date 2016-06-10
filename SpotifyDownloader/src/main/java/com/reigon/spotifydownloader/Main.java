@@ -46,6 +46,9 @@ public class Main {
 
     public static void main(String[] args) {
         
+        Interface IU = new Interface();
+        IU.iniciar();
+        /*
         ArrayList<Cancion> failedsongs = new ArrayList<Cancion>();
         
         //Input URL playlist
@@ -60,6 +63,7 @@ public class Main {
         String path = fileChooser.getSelectedFile().getAbsolutePath() + File.separator;
         System.out.println("Path: " + path);
         
+                
         //Interfaz de progreso
         TextUI textui = new TextUI();
         textui.setVisible(true);
@@ -67,7 +71,8 @@ public class Main {
         
         //Sacamos datos de la playlist de spotify usando su API
         SpotifyProcessor spoti = new SpotifyProcessor(textui);
-
+        
+        
         try {
             spoti.process(url);
         } catch (UnsupportedEncodingException ex) {
@@ -79,7 +84,7 @@ public class Main {
         textui.printText("Buscando Canciones");
         YoutubeSearch yout = new YoutubeSearch(textui);
         List<Cancion> canciones;
-        canciones = yout.process(spoti.getListaCanciones());
+        canciones = yout.process(spoti.getListaCanciones()); 
         
         //Procedemos a descargar las canciones
         ExecutorService service = Executors.newFixedThreadPool(5);
@@ -160,6 +165,6 @@ public class Main {
         textui.printText("Se ha terminado de descargar ------ Ya puede cerrar la aplicación ");
         Scanner in = new Scanner(System.in);
         String end = in.nextLine();
-        System.exit(0);
+        System.exit(0);*/
     }
 }

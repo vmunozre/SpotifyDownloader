@@ -7,7 +7,6 @@ package com.reigon.spotifydownloader;
 
 import com.sun.deploy.uitoolkit.impl.fx.HostServicesFactory;
 import com.sun.javafx.application.HostServicesDelegate;
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -130,44 +129,43 @@ public class Interface extends Application {
         Button bdescargar = new Button("Descargar");
         bdescargar.getStyleClass().add("button1");
         root.add(bdescargar, 1, 9);
-        root.setHalignment(bdescargar, HPos.CENTER);
+        GridPane.setHalignment(bdescargar, HPos.CENTER);
 
-        bdescargar.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                String localUrl = turl.getText().toString();
-                String localPath = tpath.getText().toString();
-                if (isValidUrl(localUrl)) {
-                    url = localUrl;
-                } else {
-                    Alert alert = new Alert(AlertType.INFORMATION);
-                    alert.setTitle("Error URL PlayList");
-                    alert.setHeaderText(null);
-                    alert.setContentText("La url introducida no está bien formada, por favor"
-                            + " intentelo de nuevo o acuda a ['?'] para buscar ayuda.");
-                    alert.showAndWait();
-                }
-                File pathCheck = new File(localPath);
-                if(pathCheck.isDirectory()){
-                    path = localPath;
-                }else{
-                    Alert alert = new Alert(AlertType.INFORMATION);
-                    alert.setTitle("Error Ruta Carpeta");
-                    alert.setHeaderText(null);
-                    alert.setContentText("La rúta de la carpeta introducida no es correcta o no existe.");
-                    alert.showAndWait();
-                }
-                if(isValidUrl(localUrl)&&pathCheck.isDirectory()){
-                    primaryStage.close();
-                }
-                System.out.println("URL: " + url + " - Path: " + path);
+        bdescargar.setOnMouseClicked((MouseEvent event) -> {
+            String localUrl = turl.getText();
+            String localPath = tpath.getText();
+            if (isValidUrl(localUrl)) {
+                url = localUrl;
+            } else {
+                Alert alert = new Alert(AlertType.INFORMATION);
+                alert.setTitle("Error URL PlayList");
+                alert.setHeaderText(null);
+                alert.setContentText("La url introducida no está bien formada, por favor"
+                        + " intentelo de nuevo o acuda a ['?'] para buscar ayuda.");
+                alert.showAndWait();
+            }
+            File pathCheck = new File(localPath);
+            if(pathCheck.isDirectory()){
+                path = localPath;
+            }else{
+                Alert alert = new Alert(AlertType.INFORMATION);
+                alert.setTitle("Error Ruta Carpeta");
+                alert.setHeaderText(null);
+                alert.setContentText("La rúta de la carpeta introducida no es correcta o no existe.");
+                alert.showAndWait();
+            }
+            if(isValidUrl(localUrl)&&pathCheck.isDirectory()){
+                primaryStage.close();
+                Downloader d = new Downloader(localUrl,path);
+                d.start();
+                
             }
         });
 
         //Info
         Label info3 = new Label("Copyright (C) 2016 Victor_Reiner & Gonzalo Ruanes");
         root.add(info3, 1, 12);
-        root.setHalignment(info3, HPos.CENTER);
+        GridPane.setHalignment(info3, HPos.CENTER);
 
         //Boton Ayuda
         Button bayuda = new Button();
