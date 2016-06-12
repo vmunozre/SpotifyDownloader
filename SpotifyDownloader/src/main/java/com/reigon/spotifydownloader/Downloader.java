@@ -1,7 +1,21 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+    Licencia:
+    «Copyright 2016 ReiGon - Victor Reiner & Gonzalo Ruanes»
+
+    This file is part of YouDownloadify.
+
+    YouDownloadify is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    YouDownloadify is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.reigon.spotifydownloader;
 
@@ -16,33 +30,37 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
-import java.util.concurrent.ExecutionException;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author Gonzalo
+
+/*
+ * @author Victor_Reiner_&_Gonzalo_Ruanes
  */
 public class Downloader {
     
     String spotifyURL;
     String folderpath;
     List<Cancion> failedsongs;
+    Interface textui;
     
-    public Downloader(String url,String path){
+    
+    public Downloader(String url,String path, Interface textui){
         this.spotifyURL = url;
         this.folderpath = path;
         this.failedsongs = new ArrayList();
+        this.textui = textui;
+        
     }
     
     public void start(){
         
-        TextUI textui = new TextUI();
-        textui.setVisible(true);
+        //DownloadUI textui = new DownloadUI();
+        
         textui.printText("Recuperando lista de Spotify");
         
         SpotifyProcessor spoti = new SpotifyProcessor(textui);
@@ -133,10 +151,13 @@ public class Downloader {
             }
         }
 
-        textui.printText("Se ha terminado de descargar ------ Ya puede cerrar la aplicación ");
-        Scanner in = new Scanner(System.in);
-        String end = in.nextLine();
-        System.exit(0);
+        textui.printText("Se ha terminado de descargar ------ La aplicación se cerrara en 10 segundos automaticamente.");
+        try {
+            Thread.sleep(10000);
+            System.exit(0);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Downloader.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
     }
     

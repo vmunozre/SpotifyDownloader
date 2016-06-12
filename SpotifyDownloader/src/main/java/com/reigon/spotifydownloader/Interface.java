@@ -1,52 +1,57 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+    Licencia:
+    «Copyright 2016 ReiGon - Victor Reiner & Gonzalo Ruanes»
+
+    This file is part of YouDownloadify.
+
+    YouDownloadify is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    YouDownloadify is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.reigon.spotifydownloader;
 
 import com.sun.deploy.uitoolkit.impl.fx.HostServicesFactory;
 import com.sun.javafx.application.HostServicesDelegate;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import javafx.scene.paint.Paint;
-import javafx.scene.paint.RadialGradientBuilder;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Stop;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
 import javafx.stage.Modality;
-import javafx.stage.StageStyle;
-import javax.imageio.ImageIO;
 
-/**
- *
- * @author Victor
+
+/*
+ * @author Victor_Reiner_&_Gonzalo_Ruanes
  */
 public class Interface extends Application {
 
@@ -56,12 +61,15 @@ public class Interface extends Application {
     private TextField turl;
     private TextField tpath;
 
+    private TextArea text;
+
     public Interface() {
 
     }
 
     @Override
     public void start(Stage primaryStage) {
+        Platform.setImplicitExit(false);
 
         //Grid
         GridPane root = new GridPane();
@@ -145,20 +153,72 @@ public class Interface extends Application {
                 alert.showAndWait();
             }
             File pathCheck = new File(localPath);
-            if(pathCheck.isDirectory()){
+            if (pathCheck.isDirectory()) {
                 path = localPath;
-            }else{
+            } else {
                 Alert alert = new Alert(AlertType.INFORMATION);
                 alert.setTitle("Error Ruta Carpeta");
                 alert.setHeaderText(null);
                 alert.setContentText("La rúta de la carpeta introducida no es correcta o no existe.");
                 alert.showAndWait();
             }
-            if(isValidUrl(localUrl)&&pathCheck.isDirectory()){
-                primaryStage.close();
-                Downloader d = new Downloader(localUrl,path);
-                d.start();
-                
+            if (isValidUrl(localUrl) && pathCheck.isDirectory()) {
+                //primaryStage.close();
+
+                //Downloader d = new Downloader(localUrl, path);
+                //d.start();
+                //Platform.exit();
+                GridPane root2 = new GridPane();
+                root2.setPadding(new Insets(12));
+                root2.setStyle("-fx-background-color:#8bc34a;");
+                root2.setHgap(2);
+                root2.setVgap(2);
+                root2.setAlignment(Pos.CENTER);
+
+                //Titulo
+                Text titulo2 = new Text("Descargando...");
+                titulo2.setFont(Font.font("Courier New", FontWeight.EXTRA_BOLD, 32));
+                root2.add(titulo2, 1, 0);
+                root2.setHalignment(titulo2, HPos.CENTER);
+
+                //Area de texto
+                text = new TextArea();
+                text.setPrefWidth(500);
+                text.setPrefHeight(300);
+                text.setEditable(false);
+
+                root2.add(text, 1, 2);
+                root2.setHalignment(text, HPos.CENTER);
+
+                //Info
+                Label infoC = new Label("Copyright (C) 2016 Victor_Reiner & Gonzalo Ruanes");
+                root2.add(infoC, 1, 12);
+                root2.setHalignment(infoC, HPos.CENTER);
+
+                //Escena
+                Scene scene2 = new Scene(root2);
+                ClassLoader c3 = Thread.currentThread().getContextClassLoader();
+                InputStream is3 = c3.getResourceAsStream("style.css");
+                scene2.getStylesheets().add(c3.getResource("style.css").toString());
+
+                primaryStage.setTitle("Descargando - YouDownloadify");
+                primaryStage.setScene(scene2);
+                primaryStage.show();
+                Interface clon = this;
+
+                Thread thDescarga = new Thread(new Runnable() {
+                    public void run() {
+                        try {
+                            Downloader d = new Downloader(localUrl, path, clon);
+                            d.start();
+                        } catch (Exception e) {
+                            System.out.println("Error en el Hilo: " + e.getMessage());
+
+                        }
+                    }
+                }, "HiloDescarga");
+                thDescarga.start();
+
             }
         });
 
@@ -235,6 +295,7 @@ public class Interface extends Application {
                 });
                 //Creacion de la escena
                 Scene modalScene = new Scene(helpPane);
+                modalStage.setTitle("Ayuda - YouDownloadify");
                 modalStage.setScene(modalScene);
                 modalStage.initModality(Modality.APPLICATION_MODAL);
                 modalStage.showAndWait();
@@ -274,6 +335,15 @@ public class Interface extends Application {
         return path;
     }
 
+    public void printText(String t) {
+        this.text.appendText(t);
+        this.text.appendText("\n");
+
+    }
+
+    public void clearText() {
+        this.text.setText("");
+    }
 
     public void iniciar() {
         Application.launch();
