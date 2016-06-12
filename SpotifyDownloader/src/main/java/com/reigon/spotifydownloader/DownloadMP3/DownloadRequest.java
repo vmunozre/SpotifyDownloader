@@ -2,14 +2,14 @@
     Licencia:
     «Copyright 2016 ReiGon - Victor Reiner & Gonzalo Ruanes»
 
-    This file is part of SpotifyDownloader.
+    This file is part of YouDownloadify.
 
-    SpotifyDownloader is free software: you can redistribute it and/or modify
+    YouDownloadify is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    SpotifyDownloader is distributed in the hope that it will be useful,
+    YouDownloadify is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
@@ -38,7 +38,9 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.reigon.spotifydownloader.TextUI;
+
+import com.reigon.spotifydownloader.Interface;
+
 /*
  * @author Victor_Reiner_&_Gonzalo_Ruanes
  */
@@ -68,14 +70,14 @@ public class DownloadRequest implements Callable<File> {
         
         private final String path;
         
-        TextUI textui;
+        Interface textui;
 	/**
 	 * 
 	 * @param videoId
          * @param path
          * @param nombreCancion
 	 */
-	public DownloadRequest(String videoId, String path, String nombreCancion, TextUI t) {
+	public DownloadRequest(String videoId, String path, String nombreCancion, Interface t) {
 		this.videoId = videoId;
                 this.path = path;
                 this.nombreCancion = nombreCancion;
