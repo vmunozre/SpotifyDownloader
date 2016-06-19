@@ -22,6 +22,8 @@ package com.reigon.spotifydownloader;
 
 import com.mpatric.mp3agic.ID3v1;
 import com.mpatric.mp3agic.ID3v1Tag;
+import com.mpatric.mp3agic.ID3v2;
+import com.mpatric.mp3agic.ID3v24Tag;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.Mp3File;
 import com.mpatric.mp3agic.NotSupportedException;
@@ -97,38 +99,40 @@ public class Cancion {
     }
 
     public void saveMetadata(String path, String filename) throws IOException, UnsupportedTagException, InvalidDataException, NotSupportedException {
-
+        
         Mp3File mp3file = new Mp3File(path + filename);
-        ID3v1 id3v1Tag;
-        if (mp3file.hasId3v1Tag()) {
-            id3v1Tag = mp3file.getId3v1Tag();
+        ID3v2 id3v2Tag;
+        if (mp3file.hasId3v2Tag()) {
+          id3v2Tag = mp3file.getId3v2Tag();
         } else {
-            // mp3 does not have an ID3v1 tag, let's create one..
-            id3v1Tag = new ID3v1Tag();
-            mp3file.setId3v1Tag(id3v1Tag);
+          // mp3 does not have an ID3v2 tag, let's create one..
+          id3v2Tag = new ID3v24Tag();
+          mp3file.setId3v2Tag(id3v2Tag);
         }
+        
         if(this.getPrimerArtista().length() > 28){
-            id3v1Tag.setArtist(this.getPrimerArtista().substring(0, 28));
+            id3v2Tag.setArtist(this.getPrimerArtista().substring(0, 28));
         }else{
-            id3v1Tag.setArtist(this.getPrimerArtista());
+            id3v2Tag.setArtist(this.getPrimerArtista());
         }
         
         if(this.getNombre().length() > 28){
-            id3v1Tag.setTitle(this.getNombre().substring(0, 28));
+            id3v2Tag.setTitle(this.getNombre().substring(0, 28));
         }else{
-            id3v1Tag.setTitle(this.getNombre());
+            id3v2Tag.setTitle(this.getNombre());
         }
         
         if(this.getAlbum().length() > 28){
-            id3v1Tag.setAlbum(this.getAlbum().substring(0, 28));
+            id3v2Tag.setAlbum(this.getAlbum().substring(0, 28));
         }else{
-            id3v1Tag.setAlbum(this.getAlbum());
+            id3v2Tag.setAlbum(this.getAlbum());
         }
         
 
         mp3file.save(path + Utils.cleanString(this.getNombre()) + ".mp3");
         File basura = new File(path + filename);
         basura.delete();
+            
 
     }
 
