@@ -20,9 +20,6 @@
  */
 package com.reigon.spotifydownloader;
 
-import com.google.api.client.util.IOUtils;
-import com.mpatric.mp3agic.ID3v1;
-import com.mpatric.mp3agic.ID3v1Tag;
 import com.mpatric.mp3agic.ID3v2;
 import com.mpatric.mp3agic.ID3v24Tag;
 import com.mpatric.mp3agic.InvalidDataException;
@@ -30,7 +27,6 @@ import com.mpatric.mp3agic.Mp3File;
 import com.mpatric.mp3agic.NotSupportedException;
 import com.mpatric.mp3agic.UnsupportedTagException;
 import com.wrapper.spotify.models.Image;
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -40,8 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageInputStream;
+
 
 /*
  * @author Victor_Reiner_&_Gonzalo_Ruanes
@@ -74,7 +69,7 @@ public class Cancion {
     }
 
     //FUNCIONES GENERALES
-    public byte[] extractBytes(Image imagen){
+    public byte[] extractBytes(Image imagen) {
         byte[] imagenBytes = null;
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -164,14 +159,14 @@ public class Cancion {
         } else {
             id3v2Tag.setTitle(this.getNombre());
         }
-        
+
         if (this.getAlbum().length() > 28) {
             id3v2Tag.setAlbum(this.getAlbum().substring(0, 28));
         } else {
             id3v2Tag.setAlbum(this.getAlbum());
         }
 
-        if(this.imagen != null){
+        if (this.imagen != null) {
             id3v2Tag.setAlbumImage(this.extractBytes(this.imagen), this.album);
         }
         mp3file.save(path + Utils.cleanString(this.getNombre()) + ".mp3");

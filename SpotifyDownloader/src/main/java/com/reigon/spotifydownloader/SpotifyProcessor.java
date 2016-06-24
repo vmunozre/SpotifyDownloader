@@ -150,11 +150,7 @@ public class SpotifyProcessor {
                 String nombre = playlistTrack.getTrack().getName();
                 String album = playlistTrack.getTrack().getAlbum().getName();
                 Image imagen = playlistTrack.getTrack().getAlbum().getImages().get(0);
-                System.out.println("*****");
-                System.out.println("*****");
-                System.out.println("Imagen url: " + imagen.getUrl());
-                System.out.println("*****");
-                System.out.println("*****");
+                
                 int trackNum = playlistTrack.getTrack().getTrackNumber();
                 int discNum = playlistTrack.getTrack().getDiscNumber();
                 int duracion = playlistTrack.getTrack().getDuration();
