@@ -27,6 +27,7 @@ import com.wrapper.spotify.methods.PlaylistRequest;
 import com.wrapper.spotify.methods.PlaylistTracksRequest;
 import com.wrapper.spotify.methods.authentication.ClientCredentialsGrantRequest;
 import com.wrapper.spotify.models.ClientCredentials;
+import com.wrapper.spotify.models.Image;
 import com.wrapper.spotify.models.Page;
 import com.wrapper.spotify.models.Playlist;
 import com.wrapper.spotify.models.PlaylistTrack;
@@ -148,14 +149,19 @@ public class SpotifyProcessor {
             for (PlaylistTrack playlistTrack : playlistTracks) {
                 String nombre = playlistTrack.getTrack().getName();
                 String album = playlistTrack.getTrack().getAlbum().getName();
-                
+                Image imagen = playlistTrack.getTrack().getAlbum().getImages().get(0);
+                System.out.println("*****");
+                System.out.println("*****");
+                System.out.println("Imagen url: " + imagen.getUrl());
+                System.out.println("*****");
+                System.out.println("*****");
                 int trackNum = playlistTrack.getTrack().getTrackNumber();
                 int discNum = playlistTrack.getTrack().getDiscNumber();
                 int duracion = playlistTrack.getTrack().getDuration();
                 
                 textui.printText("Canción: " + nombre + " - Album: " + album + " AÑADIDA A LA BUSQUEDA!");
                 
-                Cancion track = new Cancion(nombre, album, duracion, trackNum, discNum);
+                Cancion track = new Cancion(nombre, album, duracion, trackNum, discNum, imagen);
 
                 List<SimpleArtist> artistas = playlistTrack.getTrack().getArtists();
 
