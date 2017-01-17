@@ -114,14 +114,15 @@ public class SpotifyProcessor {
                     numTracks = playlist.getTracks().getTotal();
                     System.out.println("Num Tracks PlayList: " + numTracks);
                     textui.printText("Num Tracks PlayList: " + numTracks);
+                    //Sacamos las canciones pasando el offset y el limite
+                    for (int i = 0; i <= numTracks - 1; i += 30) {
+                        cargarCanciones(i, 30, user, idP,textui);
+                    }
                 } catch (Exception e) {
                     System.out.println("Something went wrong!" + e.getMessage());
                     textui.printText("Something went wrong!" + e.getMessage());
                 }
-                //Sacamos las canciones pasando el offset y el limite
-                for (int i = 0; i <= numTracks - 1; i += 30) {
-                    cargarCanciones(i, 30, user, idP,textui);
-                }
+                
          
             }
 
