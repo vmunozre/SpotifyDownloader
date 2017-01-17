@@ -7,7 +7,7 @@
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.min.js"></script>
-
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <title>Youdownloadify</title>
     <style>
@@ -17,6 +17,14 @@
         
         .white-text {
             color: aliceblue;
+        }
+        
+        .backgroud-white {
+            background-color: aliceblue;
+        }
+        
+        .black-text {
+            color: black;
         }
         
         .center-text {
@@ -31,14 +39,48 @@
 
         <div class="col s2"></div>
         <div class="col s8">
-            <ul class="collapsible" data-collapsible="accordion">
-                <li>
-                    <div class="collapsible-header active">Info</div>
-                    <div class="collapsible-body">
-                        <p id="idInfo"></p>
+            <div class="valign-wrapper">
+                <div class="card-panel teal" style="width:100%; ">
+                    <h1 class="center-text"><strong>YouDownloadify</strong></h1>
+                    <div>
+                        <h3 id="stage" class="center-text">Buscando Canciones en Spotify</h3>
+                        <div>
+                            <span class="new badge green" data-badge-caption="Progreso"></span>
+                            <div class="progress">
+                                <div id="processBar" class="determinate lime accent-3" style="width: 70%"></div>
+                            </div>
+                        </div>
+                        <div id="stageDescargando" style="display:none;">
+                            <ul class="collection with-header">
+                                <li class="collection-header">
+                                    <h4>Canciones descargandose</h4></li>
+                                <li class="collection-item" id="collectionDescargandose">
+                                    <div>CANCION1<a href="#!" class="secondary-content"><i class="material-icons">play_for_work</i></a></div>
+                                </li>
+
+                            </ul>
+                        </div>
+                        <ul class="collapsible backgroud-white" data-collapsible="accordion">
+                            <li>
+                                <div class="collapsible-header">Log info</div>
+                                <div class="collapsible-body">
+
+                                    <textarea rows="15" cols="50" style="resize: none;" data-role="none" id="textarea1" class="materialize-textarea"></textarea>
+
+                                </div>
+                            </li>
+                        </ul>
+                        <br/>
+                        <div class="center-text white-text">Copyright (C) 2016-2017 Victor Reiner & Gonzalo Ruanes</div>
                     </div>
-                </li>
-            </ul>
+
+
+                </div>
+            </div>
+
+
+
+
         </div>
         <div class="col s2"></div>
     </div>
@@ -47,19 +89,55 @@
 <script>
     $(document).ready(function () {
         $('.collapsible').collapsible();
-        setInterval(function () {checkStatus(); }, 1500);
+        setInterval(function () {
+            checkStatus();
+        }, 4);
     });
 
-    function checkStatus() {
+    function checkStatus () {
         var dataGet = {};
         $.ajax({
             url: '/getstatus',
             data: dataGet,
             type: 'GET',
             success: function (result) {
+                console.log(result);
                 var info = $('#idInfo').html();
-                info += result;
-                $('#idInfo').html(info);
+                var stage = result.stage;
+                if (stage == "Spotify") {
+                    $('#stage').html("Buscando Canciones en Spotify");
+                }
+                if (stage == "Youtube") {
+                    $('#stage').html("Buscando Canciones en Youtube");
+                }
+                if (stage == "Download") {
+                    $('#stage').html("Descargando Canciones");
+                    $('#stageDescargando').slideDown();
+                    var downloading = result.downloads;
+                    $('#collectionDescargandose').html();
+                    for (var i = 0, l = downloading.length; i < l; i++) {
+                        var aux = '<div>' + downloading[i] + '<a href="#!" class="secondary-content"><i class="material-icons">play_for_work</i></a></div>';
+                        $('#collectionDescargandose').append(aux);
+                        
+                    }
+                }
+                if (stage == "End") {
+                    $('#stage').html("Descargas finalizadas");
+                    $('#stageDescargando').hide();
+                }
+                var messages = result.messages;
+                console.log(result.messages);
+                for (var i = 0, l = messages.length; i < l; i++) {
+                    var aux = $('#textarea1').html() + "\n";
+                    $('#textarea1').append(aux);
+                }
+
+
+                var aux = ((result.downloaded / result.total) * 100);
+                var percentage = aux + "%";
+                $('#processBar').width(percentage);
+                
+                
             },
             error: function (xhr, status) {
                 console.log(xhr);
@@ -68,7 +146,6 @@
             }
         });
     };
-    
 </script>
 
 </html>
