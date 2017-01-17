@@ -131,11 +131,14 @@ public class DownloadRequest implements Callable<File> {
                 
 		File file = new File(this.path + this.nombreCancion);
                 System.out.println("downloading file " + file.getAbsolutePath() + " from " + connection.getURL());
+                status.addcurrentdownload(nombreCancion);
 		try (RandomAccessFile local = new RandomAccessFile(file, "rw")) {
 			local.getChannel().transferFrom(remote, 0, Integer.MAX_VALUE);
 			local.close();
-                        System.out.println("download complete of: " + response.get("title"));		
+                        System.out.println("download complete of: " + response.get("title"));
+                        status.removecurrentdownload(nombreCancion);
                         status.addmessage("Descargada: " + this.nombreCancion);
+                        status.setDownloaded(status.getDownloaded()+1);
 			return file;
 		} catch (Exception ex) {
                         System.out.println("could not download video, removing file...");

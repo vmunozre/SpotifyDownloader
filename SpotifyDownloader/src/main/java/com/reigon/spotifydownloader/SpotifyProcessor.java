@@ -118,6 +118,8 @@ public class SpotifyProcessor {
                     numTracks = playlist.getTracks().getTotal();
                     System.out.println("Num Tracks PlayList: " + numTracks);
                     status.addmessage("Num Tracks PlayList: " + numTracks);
+                    status.setTotalsongs(numTracks);
+                    
                     //Sacamos las canciones pasando el offset y el limite
                     for (int i = 0; i <= numTracks - 1; i += 30) {
                         cargarCanciones(i, 30, user, idP,status);

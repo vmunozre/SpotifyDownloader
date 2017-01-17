@@ -16,6 +16,10 @@ public class DownloadStatusObject {
     private String stageStatus;
     private ArrayList<String> messageBuffer;
     private Semaphore sem;
+    private Semaphore sem2;
+    private int totalsongs;
+    private int downloaded;
+    private ArrayList<String> currentDownloads;
     
   
     
@@ -23,6 +27,9 @@ public class DownloadStatusObject {
         this.stageStatus = "Spotify";
         this.messageBuffer = new ArrayList();
         sem = new Semaphore(1);
+        sem2 = new Semaphore(1);
+        this.currentDownloads = new ArrayList();
+        
     }
     
     public ArrayList<String> retrievebuffer() throws InterruptedException{
@@ -54,4 +61,39 @@ public class DownloadStatusObject {
         sem.release();
     }
 
+    public void addcurrentdownload(String id) throws InterruptedException{
+        sem2.acquire();
+        this.currentDownloads.add(id);
+        sem2.release();
+    }
+    
+    public void removecurrentdownload(String id) throws InterruptedException{
+        sem2.acquire();
+        this.currentDownloads.remove(id);
+        sem2.release();
+    }
+    
+    public int getTotalsongs() {
+        return totalsongs;
+    }
+
+    public void setTotalsongs(int totalsongs) {
+        this.totalsongs = totalsongs;
+    }
+
+    public int getDownloaded() {
+        return downloaded;
+    }
+
+    public void setDownloaded(int downloaded) {
+        this.downloaded = downloaded;
+    }
+
+    public ArrayList<String> getCurrentDownloads() {
+        return currentDownloads;
+    }
+
+    
+    
+    
 }

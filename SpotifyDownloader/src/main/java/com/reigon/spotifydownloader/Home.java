@@ -85,12 +85,19 @@ public class Home {
     @ResponseBody
     public String status() throws InterruptedException{
         JSONObject output = new JSONObject();
-        JSONArray array = new JSONArray();
+        JSONArray arraymessages = new JSONArray();
+        JSONArray arraydownloads = new JSONArray();
         for (String s:this.downloadStatus.retrievebuffer()){
-            array.add(s);
+            arraymessages.add(s);
+        }
+        for (String n:this.downloadStatus.getCurrentDownloads()){
+            arraydownloads.add(n);
         }
         output.put("stage", this.downloadStatus.getStageStatus());
-        output.put("messages", array);
+        output.put("messages", arraymessages);
+        output.put("downloads", arraydownloads);
+        output.put("total", this.downloadStatus.getTotalsongs());
+        output.put("downloaded", this.downloadStatus.getDownloaded());
         //System.out.println("Return JSON: " + output.getAsString());
         return output.toString();
     }

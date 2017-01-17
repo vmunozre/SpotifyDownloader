@@ -109,6 +109,8 @@ public class Downloader {
                     } else {
                         System.out.println("REPETIDA!");
                         status.addmessage("La canción "+ cancion.getNombre() +" Está repetida");
+                        status.setDownloaded(status.getDownloaded()+1);
+                        status.removecurrentdownload(cancion.getNombre());
                     }
 
                 } 
@@ -116,6 +118,8 @@ public class Downloader {
             } catch (Exception ex) {
                 System.out.println("El video " + cancion.getUrl() + " No ha podido descargarse, por favor bajalo manualmente");
                 status.addmessage("La canción " + cancion.getNombre() + " No ha podido descargarse, por favor, descargala manualmente");
+                status.setDownloaded(status.getDownloaded()+1);
+                status.removecurrentdownload(cancion.getNombre());
                 failedsongs.add(cancion);
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             }
