@@ -46,24 +46,23 @@ public class Downloader {
     String spotifyURL;
     String folderpath;
     List<Cancion> failedsongs;
-    Interface textui;
+    DownloadStatusObject status;
     
     
-    public Downloader(String url,String path, Interface textui){
+    public Downloader(String url,String path, DownloadStatusObject status){
         this.spotifyURL = url;
         this.folderpath = path;
         this.failedsongs = new ArrayList();
-        this.textui = textui;
+        this.status = status;
         
     }
     
-    public void start(){
+    public void start() throws InterruptedException{
         
         //DownloadUI textui = new DownloadUI();
+        this.status = new DownloadStatusObject();
         
-        textui.printText("Recuperando lista de Spotify");
-        
-        SpotifyProcessor spoti = new SpotifyProcessor(textui);
+        SpotifyProcessor spoti = new SpotifyProcessor(this.status);
         
         //Processing of the Spotify Playlist
         try {
@@ -71,18 +70,24 @@ public class Downloader {
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
-        textui.clearText();
+        
         
         //Youtube Search of the songs
-        textui.printText("Buscando Canciones");
-        YoutubeSearch yout = new YoutubeSearch(textui);
+        
+        status.setStageStatus("Youtube");
+        status.clearbuffer();
+        status.addmessage("Buscando Canciones");
+        
+        YoutubeSearch yout = new YoutubeSearch(status);
         List<Cancion> canciones;
         canciones = yout.process(spoti.getListaCanciones());
         
         //Then we download the songs
         ExecutorService service = Executors.newFixedThreadPool(5);
-        textui.clearText();
-        textui.printText("Descargando Canciones");
+        
+        status.setStageStatus("Download");
+        status.clearbuffer();
+        status.addmessage("Descargando Canciones");
         
         for (Cancion cancion : canciones) {
 
@@ -93,7 +98,7 @@ public class Downloader {
                     //Comprobamos que no exista
                     File src = new File(folderpath + cancion.getNombre() + ".mp3");
                     if (!src.exists()) {
-                        service.submit(new DownloadRequest(cancion.getVideoID(), folderpath, nombretemp, textui)).get();
+                        service.submit(new DownloadRequest(cancion.getVideoID(), folderpath, nombretemp, status)).get();
                         
                         try {
                             // the file we are going to modify
@@ -103,24 +108,25 @@ public class Downloader {
                         }
                     } else {
                         System.out.println("REPETIDA!");
-                        textui.printText("La canción "+ cancion.getNombre() +" Está repetida");
+                        status.addmessage("La canción "+ cancion.getNombre() +" Está repetida");
                     }
 
                 } 
 
             } catch (Exception ex) {
                 System.out.println("El video " + cancion.getUrl() + " No ha podido descargarse, por favor bajalo manualmente");
-                textui.printText("La canción " + cancion.getNombre() + " No ha podido descargarse, por favor, descargala manualmente");
+                status.addmessage("La canción " + cancion.getNombre() + " No ha podido descargarse, por favor, descargala manualmente");
                 failedsongs.add(cancion);
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         
         service.shutdown();
-        textui.clearText();
-        textui.printText("Estas son las canciones que no se han podido descargar automáticamente");
-        textui.printText("puedes bajartelas manualmente utilizando el link en youtube-mp3.org");
-        textui.printText("Canciones fallidas: " + failedsongs.size());
+        status.setStageStatus("End");
+        status.clearbuffer();
+        status.addmessage("Estas son las canciones que no se han podido descargar automáticamente");
+        status.addmessage("puedes bajartelas manualmente utilizando el link en youtube-mp3.org");
+        status.addmessage("Canciones fallidas: " + failedsongs.size());
         FileWriter fi = null;
 
         PrintWriter pw = null;
@@ -132,8 +138,8 @@ public class Downloader {
             pw.println("Canciones fallidas: " + failedsongs.size());
             pw.println();
             for (Cancion s : failedsongs) {
-                textui.printText("Titulo de la canción: " + s.getNombre() + " - " + s.getArtistas().get(0));
-                textui.printText("Link de descarga: " + s.getUrl());
+                status.addmessage("Titulo de la canción: " + s.getNombre() + " - " + s.getArtistas().get(0));
+                status.addmessage("Link de descarga: " + s.getUrl());
 
                 pw.println("Titulo de la canción: " + s.getNombre() + " - " + s.getArtistas().get(0));
                 pw.println("Link de descarga: " + s.getUrl());
@@ -151,7 +157,7 @@ public class Downloader {
             }
         }
 
-        textui.printText("Se ha terminado de descargar ------ La aplicación se cerrara en 10 segundos automaticamente.");
+        status.addmessage("Se ha terminado de descargar ------ La aplicación se cerrara en 10 segundos automaticamente.");
         try {
             Thread.sleep(10000);
             System.exit(0);

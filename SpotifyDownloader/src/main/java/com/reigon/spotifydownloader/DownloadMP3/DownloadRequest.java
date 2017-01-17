@@ -36,6 +36,7 @@ import java.util.concurrent.Callable;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.reigon.spotifydownloader.DownloadStatusObject;
 
 import com.reigon.spotifydownloader.Interface;
 
@@ -67,18 +68,18 @@ public class DownloadRequest implements Callable<File> {
         
         private final String path;
         
-        Interface textui;
+        DownloadStatusObject status;
 	/**
 	 * 
 	 * @param videoId
          * @param path
          * @param nombreCancion
 	 */
-	public DownloadRequest(String videoId, String path, String nombreCancion, Interface t) {
+	public DownloadRequest(String videoId, String path, String nombreCancion, DownloadStatusObject status) {
 		this.videoId = videoId;
                 this.path = path;
                 this.nombreCancion = nombreCancion;
-                this.textui = t;
+                this.status = status;
 	}
 
 	@Override
@@ -134,7 +135,7 @@ public class DownloadRequest implements Callable<File> {
 			local.getChannel().transferFrom(remote, 0, Integer.MAX_VALUE);
 			local.close();
                         System.out.println("download complete of: " + response.get("title"));		
-                        textui.printText("Descargada: " + this.nombreCancion);
+                        status.addmessage("Descargada: " + this.nombreCancion);
 			return file;
 		} catch (Exception ex) {
                         System.out.println("could not download video, removing file...");

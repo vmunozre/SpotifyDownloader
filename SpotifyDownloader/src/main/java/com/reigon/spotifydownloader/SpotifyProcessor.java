@@ -52,14 +52,14 @@ public class SpotifyProcessor {
     private List<Cancion> listaCanciones;
     private int numTracks;
     private Api api;
-    Interface textui;
+    public DownloadStatusObject status;
     private String clientId = "";
     private String clientSecret = "";
     
-    public SpotifyProcessor(Interface t) {
+    public SpotifyProcessor(DownloadStatusObject status) {
         listaCanciones = new ArrayList<>();
         this.numTracks = 0;
-        this.textui = t;
+        this.status = status;
         cargarApiKeys();
     }
     private void cargarApiKeys(){
@@ -78,14 +78,14 @@ public class SpotifyProcessor {
             Logger.getLogger(YoutubeSearch.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    public void process(String url) throws UnsupportedEncodingException {
+    public void process(String url) throws UnsupportedEncodingException, InterruptedException {
         
         //Decodeamos y encodeamos los nombres de usuario
         String user = URLEncoder.encode(URLDecoder.decode(getUser(url), "UTF-8"), "UTF-8");
         String idP = getIdPlayList(url);
 
         System.out.println("Usuario: " + user + " - ID PlayList: " + idP);
-        textui.printText("Usuario: " + user + " - ID PlayList: " + idP);
+        this.status.addmessage("Usuario: " + user + " - ID PlayList: " + idP);
 
         // Create an API instance. The default instance connects to https://api.spotify.com/.
         api = Api.builder()
@@ -105,7 +105,11 @@ public class SpotifyProcessor {
 
                 /* Set access token on the Api object so that it's used going forward */
                 api.setAccessToken(clientCredentials.getAccessToken());
-                textui.printText("Procediendo a analizar la playList...");
+                try {
+                    status.addmessage("Procediendo a analizar la playList...");
+                } catch (InterruptedException ex) {
+                    System.out.println("Interrupted");
+                }
                 //Sacamos el numero de tracks que tiene la playlist
                 final PlaylistRequest infoPlayListRequest = api.getPlaylist(user, idP).build();
 
@@ -113,14 +117,19 @@ public class SpotifyProcessor {
                     final Playlist playlist = infoPlayListRequest.get();
                     numTracks = playlist.getTracks().getTotal();
                     System.out.println("Num Tracks PlayList: " + numTracks);
-                    textui.printText("Num Tracks PlayList: " + numTracks);
+                    status.addmessage("Num Tracks PlayList: " + numTracks);
                     //Sacamos las canciones pasando el offset y el limite
                     for (int i = 0; i <= numTracks - 1; i += 30) {
-                        cargarCanciones(i, 30, user, idP,textui);
+                        cargarCanciones(i, 30, user, idP,status);
                     }
                 } catch (Exception e) {
                     System.out.println("Something went wrong!" + e.getMessage());
-                    textui.printText("Something went wrong!" + e.getMessage());
+                    
+                    try {
+                        status.addmessage("Something went wrong!" + e.getMessage());
+                    } catch (InterruptedException ex) {
+                        System.out.println("Interrupted");
+                    }
                 }
                 
          
@@ -135,7 +144,7 @@ public class SpotifyProcessor {
 
     }
 
-    private void cargarCanciones(int offset, int limit, String user, String idP, Interface textui) {
+    private void cargarCanciones(int offset, int limit, String user, String idP, DownloadStatusObject status) throws InterruptedException {
         
         final PlaylistTracksRequest playListTrackRequest = api.getPlaylistTracks(user, idP).offset(offset).limit(limit).build();
         
@@ -156,7 +165,7 @@ public class SpotifyProcessor {
                 int discNum = playlistTrack.getTrack().getDiscNumber();
                 int duracion = playlistTrack.getTrack().getDuration();
                 
-                textui.printText("Canción: " + nombre + " - Album: " + album + " AÑADIDA A LA BUSQUEDA!");
+                status.addmessage("Canción: " + nombre + " - Album: " + album + " AÑADIDA A LA BUSQUEDA!");
                 
                 Cancion track = new Cancion(nombre, album, duracion, trackNum, discNum, imagen);
 
@@ -172,7 +181,7 @@ public class SpotifyProcessor {
             Thread.sleep(1000);
         } catch (Exception e) {
             System.out.println("Something went wrong! : " + e.getMessage());
-            textui.printText("Something went wrong! : " + e.getMessage());
+            status.addmessage("Something went wrong! : " + e.getMessage());
             
         }
     }
