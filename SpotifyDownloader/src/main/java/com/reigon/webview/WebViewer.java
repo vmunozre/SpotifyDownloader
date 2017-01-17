@@ -34,10 +34,10 @@ public class WebViewer extends Application{
         Screen screen = Screen.getPrimary();
         Rectangle2D bounds = screen.getVisualBounds();
         // create the scene
-        stage.setTitle("ComiGest");
+        stage.setTitle("Spotify Downloader");
         scene = new Scene(new Browser(),bounds.getMinX(),bounds.getMaxY(), Color.web("#666970"));
         stage.setScene(scene);
-        scene.getStylesheets().add("webviewsample/BrowserToolbar.css");        
+        //scene.getStylesheets().add("webviewsample/BrowserToolbar.css");        
         stage.show();
         stage.setMaximized(true);
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {

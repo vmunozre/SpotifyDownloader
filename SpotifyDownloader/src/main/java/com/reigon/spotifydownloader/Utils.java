@@ -19,11 +19,30 @@
  */
 package com.reigon.spotifydownloader;
 
+import com.google.api.client.util.Charsets;
+import com.google.common.io.CharStreams;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.stream.Collectors;
+
 /*
  * @author Victor_Reiner_&_Gonzalo_Ruanes
  */
 public class Utils {
+    private static Object file;
     public static String cleanString(String in){
         return in.replace("|", "").replace("/", "").replace(":", "").replace("*", "").replace("?", "").replace("<", "").replace(">", "");
+    }
+    
+    public static String readfile(String filepath) throws IOException{
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        InputStream is = cl.getResourceAsStream(filepath);
+        String result = CharStreams.toString(new InputStreamReader(is, Charsets.UTF_8));
+        return result;
     }
 }

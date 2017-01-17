@@ -7,6 +7,7 @@ package com.reigon.spotifydownloader;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import org.springframework.boot.autoconfigure.*;
 import org.springframework.stereotype.*;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +19,8 @@ public class Home {
     @RequestMapping(value = "/")
     @ResponseBody
     String getHome() throws IOException {
-        
-        String strReturn = "<html><head></head><body><h1>QUE TE JODAN CLAUDIA</h1></body></html>";
+       
+        String strReturn = Utils.readfile("Templates/index.html");
         return strReturn;
     }
 
