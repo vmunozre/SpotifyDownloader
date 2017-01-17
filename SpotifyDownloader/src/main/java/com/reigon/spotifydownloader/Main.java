@@ -19,6 +19,9 @@
  */
 package com.reigon.spotifydownloader;
 
+import com.reigon.webview.WebViewer;
+import org.springframework.boot.SpringApplication;
+
 /*
  * @author Victor_Reiner_&_Gonzalo_Ruanes
  */
@@ -26,8 +29,11 @@ public class Main {
 
     public static void main(String[] args) {
         
-        Interface IU = new Interface();
-        IU.iniciar();
+        /*Interface IU = new Interface();
+        IU.iniciar();*/
+        SpringApplication.run(Home.class, args);
+        WebViewer pWebViewer = new WebViewer();
+        pWebViewer.main(args);
         
     }
 }
