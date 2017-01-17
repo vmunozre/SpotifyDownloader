@@ -60,7 +60,7 @@ public class Downloader {
     public void start() throws InterruptedException{
         
         //DownloadUI textui = new DownloadUI();
-        this.status = new DownloadStatusObject();
+        
         
         SpotifyProcessor spoti = new SpotifyProcessor(this.status);
         
@@ -123,7 +123,6 @@ public class Downloader {
         
         service.shutdown();
         status.setStageStatus("End");
-        status.clearbuffer();
         status.addmessage("Estas son las canciones que no se han podido descargar automáticamente");
         status.addmessage("puedes bajartelas manualmente utilizando el link en youtube-mp3.org");
         status.addmessage("Canciones fallidas: " + failedsongs.size());
@@ -158,12 +157,7 @@ public class Downloader {
         }
 
         status.addmessage("Se ha terminado de descargar ------ La aplicación se cerrara en 10 segundos automaticamente.");
-        try {
-            Thread.sleep(10000);
-            System.exit(0);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(Downloader.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
         
     }
     

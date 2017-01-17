@@ -25,7 +25,7 @@ public class DownloadStatusObject {
         sem = new Semaphore(1);
     }
     
-    public ArrayList retrievebuffer() throws InterruptedException{
+    public ArrayList<String> retrievebuffer() throws InterruptedException{
         
         sem.acquire();
         ArrayList<String> aux = (ArrayList<String>) this.messageBuffer.clone();

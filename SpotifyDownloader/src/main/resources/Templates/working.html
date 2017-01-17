@@ -1,0 +1,74 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/css/materialize.min.css" />
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.min.js"></script>
+
+
+    <title>Youdownloadify</title>
+    <style>
+        body {
+            background-color: #8bc34a;
+        }
+        
+        .white-text {
+            color: aliceblue;
+        }
+        
+        .center-text {
+            text-align: center;
+            align-content: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="row">
+
+        <div class="col s2"></div>
+        <div class="col s8">
+            <ul class="collapsible" data-collapsible="accordion">
+                <li>
+                    <div class="collapsible-header active">Info</div>
+                    <div class="collapsible-body">
+                        <p id="idInfo"></p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="col s2"></div>
+    </div>
+
+</body>
+<script>
+    $(document).ready(function () {
+        $('.collapsible').collapsible();
+        setInterval(function () {checkStatus(); }, 1500);
+    });
+
+    function checkStatus() {
+        var dataGet = {};
+        $.ajax({
+            url: '/getstatus',
+            data: dataGet,
+            type: 'GET',
+            success: function (result) {
+                var info = $('#idInfo').html();
+                info += result;
+                $('#idInfo').html(info);
+            },
+            error: function (xhr, status) {
+                console.log(xhr);
+                console.log(status);
+
+            }
+        });
+    };
+    
+</script>
+
+</html>

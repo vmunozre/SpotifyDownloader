@@ -6,18 +6,16 @@
 package com.reigon.spotifydownloader;
 
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.concurrent.Semaphore;
 import javafx.application.Platform;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javax.servlet.http.HttpServletRequest;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.springframework.boot.autoconfigure.*;
 import org.springframework.stereotype.*;
 import org.springframework.web.bind.annotation.*;
@@ -64,12 +62,13 @@ public class Home {
         //Se asume que estos parametros se han validado en JS
         String path = request.getParameter("path");
         String url = request.getParameter("url");
-        
+        System.out.println("Path: " + path + " ,url: " + url);
+        this.downloadStatus = new DownloadStatusObject();
         //Lanzarlo todo
         Thread thDescarga = new Thread(new Runnable() {
                     public void run() {
                         try {
-                            Downloader d = new Downloader(localUrl, path, downloadStatus);
+                            Downloader d = new Downloader(url, path, downloadStatus);
                             d.start();
                         } catch (Exception e) {
                             System.out.println("Error en el Hilo: " + e.getMessage());
@@ -84,15 +83,16 @@ public class Home {
     
     @RequestMapping(value = "/getstatus")
     @ResponseBody
-    JsonObject status() throws InterruptedException{
-        JsonObject output = new JsonObject();
-        Gson gson = new Gson();
-        JsonElement e = gson.toJsonTree(this.downloadStatus.retrievebuffer());
-        
-        output.addProperty("stage", this.downloadStatus.getStageStatus());
-        output.add("messages", e);
-        
-        return null;
+    public String status() throws InterruptedException{
+        JSONObject output = new JSONObject();
+        JSONArray array = new JSONArray();
+        for (String s:this.downloadStatus.retrievebuffer()){
+            array.add(s);
+        }
+        output.put("stage", this.downloadStatus.getStageStatus());
+        output.put("messages", array);
+        //System.out.println("Return JSON: " + output.getAsString());
+        return output.toString();
     }
     
     public boolean isValidUrl(String input) {

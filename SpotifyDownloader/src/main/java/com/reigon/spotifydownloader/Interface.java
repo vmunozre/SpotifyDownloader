@@ -209,8 +209,8 @@ public class Interface extends Application {
                 Thread thDescarga = new Thread(new Runnable() {
                     public void run() {
                         try {
-                            Downloader d = new Downloader(localUrl, path, clon);
-                            d.start();
+                            //Downloader d = new Downloader(localUrl, path, clon);
+                            //d.start();
                         } catch (Exception e) {
                             System.out.println("Error en el Hilo: " + e.getMessage());
 

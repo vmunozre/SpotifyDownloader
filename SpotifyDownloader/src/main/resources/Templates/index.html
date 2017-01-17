@@ -1,60 +1,103 @@
-<!doctype html>
 <html>
+
 <head>
-    <meta charset="UTF-8"/>
-    	<!-- Compiled and minified CSS -->
-      	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/css/materialize.min.css"/>
-	
-		<script
-			  src="https://code.jquery.com/jquery-3.1.1.min.js"
-			  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-			  crossorigin="anonymous"></script>
-	
-      	<!-- Compiled and minified JavaScript -->
-      	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.min.js"></script>
-    <title>Inicio</title>
+    <meta charset="utf-8" />
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/css/materialize.min.css" />
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.min.js"></script>
+    
+    
+    <title>Youdownloadify</title>
+    <style>
+        body {
+            background-color: #8bc34a;
+        }
+        
+        .white-text {
+            color: aliceblue;
+        }
+        
+        .center-text {
+            text-align: center;
+            align-content: center;
+        }
+    </style>
 </head>
+
 <body>
-  <div class="row">
-    <form class="col s12">
-      <div class="row">
-        <div class="input-field col s6">
-          <input placeholder="Placeholder" id="first_name" type="text" class="validate">
-          <label for="first_name">First Name</label>
+    <div class="row">
+
+        <div class="col s2"></div>
+        <div class="col s8">
+            <div class="valign-wrapper">
+                <div class="card-panel teal" style="width:100%; ">
+                    <h1 class="center-text"><strong>YouDownloadify</strong></h1>
+                    <ul class="tabs teal darken-2">
+                        <li class="tab col s3 teal darken-2"><a class="active white-text" href="#test1">Spotify</a></li>
+                        <li class="tab col s3 teal darken-2"><a class="white-text" href="#test2">Youtube</a></li>
+                    </ul>
+
+                    <div id="test1" class="col s12">
+                        <div>
+                            <div class="input-field col s12">
+                                <input type="text" class="validate" id="urlPath">
+                                <label for="text" data-error="wrong" data-success="right" class="white-text">Introduzca la URL de la PlayList aqui...</label>
+                            </div>
+                            <div class="row">
+                                <div class="col s10">
+                                    <div class="input-field">
+                                        <input type="text" class="validate" id="downloadPath">
+                                        <label for="text" data-error="wrong" data-success="right" class="white-text">Ruta de Descarga...</label>
+                                    </div>
+                                </div>
+                                <div class="col s2 center-text"><a class="waves-effect waves-light btn light-green" onclick="openDirChooser ()">File</a></div>
+                            </div>
+                            <div class="center-text white-text"><a class="waves-effect waves-light btn light-green" onclick="downloadStart ()">¡Descargar!</a></div>
+                            <br/>
+                            <div class="center-text white-text">Copyright (C) 2016-2017 Victor Reiner & Gonzalo Ruanes</div>
+
+                        </div>
+
+                    </div>
+                    <div id="test2" class="col s12">Test 2</div>
+                </div>
+            </div>
         </div>
-        <div class="input-field col s6">
-          <input id="last_name" type="text" class="validate">
-          <label for="last_name">Last Name</label>
-        </div>
-      </div>
-      <div class="row">
-        <div class="input-field col s12">
-          <input disabled value="I am not editable" id="disabled" type="text" class="validate">
-          <label for="disabled">Disabled</label>
-        </div>
-      </div>
-      <div class="row">
-        <div class="input-field col s12">
-          <input id="password" type="password" class="validate">
-          <label for="password">Password</label>
-        </div>
-      </div>
-      <div class="row">
-        <div class="input-field col s12">
-          <input id="email" type="email" class="validate">
-          <label for="email">Email</label>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col s12">
-          This is an inline input field:
-          <div class="input-field inline">
-            <input id="email" type="email" class="validate">
-            <label for="email" data-error="wrong" data-success="right">Email</label>
-          </div>
-        </div>
-      </div>
+        <div class="col s2"></div>
+    </div>
+    <form id="startForm" action="/start">
+        <input id="dirPath" name="path"/>
+        <input id="dirUrl" name="url"/>
     </form>
-  </div>
 </body>
+<script>
+    function openDirChooser (){
+        var dataGet = {};
+        $.ajax({
+            url: '/dirchooser',
+            data: dataGet,
+            type: 'GET',
+            success: function (result) {
+                $('#downloadPath').val(result);
+            },
+            error: function (xhr, status) {
+                console.log(xhr);
+                console.log(status);
+
+            }
+        });
+    };
+    
+    function downloadStart (){
+        var dirPath = $('#downloadPath').val();
+        $('#dirPath').val(dirPath);
+        var dirUrl = $('#urlPath').val();
+        $('#dirUrl').val(dirUrl);
+        $('#startForm').submit();
+    }
+    
+</script>
+
 </html>
