@@ -51,7 +51,7 @@ public class Downloader {
     
     public Downloader(String url,String path, DownloadStatusObject status){
         this.spotifyURL = url;
-        this.folderpath = path;
+        this.folderpath = path +'/';
         this.failedsongs = new ArrayList();
         this.status = status;
         
@@ -75,7 +75,7 @@ public class Downloader {
         //Youtube Search of the songs
         
         status.setStageStatus("Youtube");
-        status.clearbuffer();
+        //status.clearbuffer();
         status.addmessage("Buscando Canciones");
         
         YoutubeSearch yout = new YoutubeSearch(status);
@@ -86,7 +86,7 @@ public class Downloader {
         ExecutorService service = Executors.newFixedThreadPool(5);
         
         status.setStageStatus("Download");
-        status.clearbuffer();
+        //status.clearbuffer();
         status.addmessage("Descargando Canciones");
         
         for (Cancion cancion : canciones) {

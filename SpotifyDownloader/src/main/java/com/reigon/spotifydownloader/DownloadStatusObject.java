@@ -17,6 +17,7 @@ public class DownloadStatusObject {
     private ArrayList<String> messageBuffer;
     private Semaphore sem;
     private Semaphore sem2;
+    private Semaphore sem3;
     private int totalsongs;
     private int downloaded;
     private ArrayList<String> currentDownloads;
@@ -28,6 +29,7 @@ public class DownloadStatusObject {
         this.messageBuffer = new ArrayList();
         sem = new Semaphore(1);
         sem2 = new Semaphore(1);
+        sem3 = new Semaphore(1);
         this.currentDownloads = new ArrayList();
         
     }
@@ -89,8 +91,11 @@ public class DownloadStatusObject {
         this.downloaded = downloaded;
     }
 
-    public ArrayList<String> getCurrentDownloads() {
-        return currentDownloads;
+    public ArrayList<String> getCurrentDownloadsCopy() throws InterruptedException {
+        sem2.acquire();
+        ArrayList<String> aux = (ArrayList<String>) currentDownloads.clone();
+        sem2.release();
+        return aux;
     }
 
     

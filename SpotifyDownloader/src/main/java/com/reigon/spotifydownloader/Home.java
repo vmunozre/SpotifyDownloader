@@ -90,7 +90,7 @@ public class Home {
         for (String s:this.downloadStatus.retrievebuffer()){
             arraymessages.add(s);
         }
-        for (String n:this.downloadStatus.getCurrentDownloads()){
+        for (String n:this.downloadStatus.getCurrentDownloadsCopy()){
             arraydownloads.add(n);
         }
         output.put("stage", this.downloadStatus.getStageStatus());
@@ -98,7 +98,7 @@ public class Home {
         output.put("downloads", arraydownloads);
         output.put("total", this.downloadStatus.getTotalsongs());
         output.put("downloaded", this.downloadStatus.getDownloaded());
-        //System.out.println("Return JSON: " + output.getAsString());
+        System.out.println("Return JSON: " + output.toString());
         return output.toString();
     }
     
