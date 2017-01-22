@@ -21,10 +21,13 @@ package com.reigon.spotifydownloader;
 
 import com.reigon.webview.WebViewer;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration;
 
 /*
  * @author Victor_Reiner_&_Gonzalo_Ruanes
  */
+@SpringBootApplication(exclude = SpringDataWebAutoConfiguration.class)
 public class Main {
 
     public static void main(String[] args) {

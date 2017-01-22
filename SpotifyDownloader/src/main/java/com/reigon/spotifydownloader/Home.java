@@ -48,7 +48,14 @@ public class Home {
                 chooser.setTitle("Seleccionar carpeta donde descargar las canciones");
 
                 File selectedDirectory = chooser.showDialog(new Stage());
-                strDirChooser = selectedDirectory.getAbsolutePath();
+               
+                if(selectedDirectory != null){
+                    strDirChooser = selectedDirectory.getAbsolutePath();
+                }else{
+                    strDirChooser = "";
+                }
+                
+                
                 pDirChooserSem.release();
             }
         });

@@ -105,6 +105,7 @@ public class Downloader {
                             cancion.saveMetadata(folderpath , nombretemp);
                         } catch (UnsupportedTagException | InvalidDataException | NotSupportedException ex) {
                             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                            throw new Exception(ex);
                         }
                     } else {
                         System.out.println("REPETIDA!");

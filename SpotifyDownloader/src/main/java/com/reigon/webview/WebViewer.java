@@ -25,6 +25,8 @@ import org.springframework.boot.SpringApplication;
 public class WebViewer extends Application{
     private static Scene scene;
     private static Stage pStage;
+    private static final int MINX = 800;    //bounds.getMinX()
+    private static final int MINY = 600;    //bounds.getMaxY()
     public WebViewer(){
         super();
     }
@@ -35,11 +37,11 @@ public class WebViewer extends Application{
         Rectangle2D bounds = screen.getVisualBounds();
         // create the scene
         stage.setTitle("Spotify Downloader");
-        scene = new Scene(new Browser(),bounds.getMinX(),bounds.getMaxY(), Color.web("#666970"));
+        scene = new Scene(new Browser(),MINX,MINY, Color.web("#666970"));
         stage.setScene(scene);
         //scene.getStylesheets().add("webviewsample/BrowserToolbar.css");        
         stage.show();
-        stage.setMaximized(true);
+        //stage.setMaximized(true);
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
           public void handle(WindowEvent we) {
               System.exit(0);
@@ -56,10 +58,12 @@ public class WebViewer extends Application{
     public String getDirChooser(){
         String strReturn = "";
         DirectoryChooser chooser = new DirectoryChooser();
-        chooser.setTitle("Importar Comic");
+        chooser.setTitle("Seleccionar Carpeta Descarga");
 
         File selectedDirectory = chooser.showDialog(scene.getWindow());
+        
         strReturn = selectedDirectory.getAbsolutePath();
+        
         return strReturn;
     }
     

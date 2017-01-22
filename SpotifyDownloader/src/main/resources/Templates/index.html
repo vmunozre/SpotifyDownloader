@@ -29,8 +29,8 @@
 <body>
     <div class="row">
 
-        <div class="col s2"></div>
-        <div class="col s8">
+        <div class="col s1"></div>
+        <div class="col s10">
             <div class="valign-wrapper">
                 <div class="card-panel teal" style="width:100%; ">
                     <h1 class="center-text"><strong>YouDownloadify</strong></h1>
@@ -61,15 +61,15 @@
                         </div>
 
                     </div>
-                    <div id="test2" class="col s12">Test 2</div>
+                    <div id="test2" class="col s12">Proximamente...</div>
                 </div>
             </div>
         </div>
-        <div class="col s2"></div>
+        <div class="col s1"></div>
     </div>
     <form id="startForm" action="/start">
-        <input id="dirPath" name="path"/>
-        <input id="dirUrl" name="url"/>
+        <input hidden id="dirPath" name="path"/>
+        <input hidden id="dirUrl" name="url"/>
     </form>
 </body>
 <script>
@@ -80,12 +80,15 @@
             data: dataGet,
             type: 'GET',
             success: function (result) {
-                $('#downloadPath').val(result);
+                $('#downloadPath').val(result + "\\");
             },
             error: function (xhr, status) {
                 console.log(xhr);
                 console.log(status);
 
+            },
+            complete: function(){
+                $('#downloadPath').focus();
             }
         });
     };

@@ -142,8 +142,6 @@ public class DownloadRequest implements Callable<File> {
 			return file;
 		} catch (Exception ex) {
                         System.out.println("could not download video, removing file...");
-                        Scanner in = new Scanner(System.in);
-                        String enlace = in.nextLine();
 			file.delete();
 			throw new IOException(ex);
 		}
