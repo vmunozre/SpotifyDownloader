@@ -128,9 +128,7 @@ public class Downloader {
         
         service.shutdown();
         status.setStageStatus("End");
-        status.addmessage("Estas son las canciones que no se han podido descargar automáticamente");
-        status.addmessage("puedes bajartelas manualmente utilizando el link en youtube-mp3.org");
-        status.addmessage("Canciones fallidas: " + failedsongs.size());
+        status.clearbuffer();
         FileWriter fi = null;
 
         PrintWriter pw = null;
@@ -161,7 +159,10 @@ public class Downloader {
             }
         }
 
-        status.addmessage("Se ha terminado de descargar ------ La aplicación se cerrara en 10 segundos automaticamente.");
+        status.addmessage("Canciones fallidas: " + failedsongs.size());
+        status.addmessage("puedes bajartelas manualmente utilizando el link en youtube-mp3.org");
+        status.addmessage("Estas son las canciones que no se han podido descargar automáticamente");
+        status.addmessage("Se ha finalizado la descarga");
         
         
     }

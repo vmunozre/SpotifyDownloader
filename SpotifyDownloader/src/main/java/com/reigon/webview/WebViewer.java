@@ -26,7 +26,7 @@ public class WebViewer extends Application{
     private static Scene scene;
     private static Stage pStage;
     private static final int MINX = 800;    //bounds.getMinX()
-    private static final int MINY = 600;    //bounds.getMaxY()
+    private static final int MINY = 820;    //bounds.getMaxY()
     public WebViewer(){
         super();
     }

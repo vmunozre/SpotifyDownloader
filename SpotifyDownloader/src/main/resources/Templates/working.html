@@ -26,11 +26,19 @@
         .black-text {
             color: black;
         }
+        .background-black {
+            background-color: darkslategrey;
+        }
         
         .center-text {
             text-align: center;
             align-content: center;
         }
+        .scrollable {
+            max-height: 250px;
+            overflow-y: scroll;
+        }
+        
     </style>
 </head>
 
@@ -73,14 +81,14 @@
                         </div>
                         <ul class="collapsible backgroud-white" data-collapsible="accordion">
                             <li>
-                                <div class="collapsible-header">Log info</div>
+                                <div class="collapsible-header white-text background-black">Detalles de la descarga</div>
                                 <div class="collapsible-body">
-                                    <ul class="collection with-header" id="infoLog">
-
+                                    <ul class="collection with-header scrollable" id="infoLog">
+                                    
                                     </ul>
 
 
-                                </div>
+                                 </div>
                             </li>
                         </ul>
                         <br/>
@@ -122,9 +130,15 @@
                     $('#stage').html("Buscando Canciones en Spotify");
                 }
                 if (stage == "Youtube") {
+                    if ($('#stage').html() == "Buscando Canciones en Spotify") {
+                        $('#infoLog').html("");
+                    }
                     $('#stage').html("Buscando Canciones en Youtube");
                 }
                 if (stage == "Download") {
+                    if ($('#stage').html() == "Buscando Canciones en Youtube") {
+                        $('#infoLog').html("");
+                    }
                     $('#preDownloadSpin').slideUp();
                     $('#divProgress').slideDown();
                     $('#collectionDescargandose').slideDown();
@@ -133,8 +147,8 @@
                     var downloading = result.downloads;
                     $('#collectionDescargandose').html('');
                     for (var i = 0, l = downloading.length; i < l; i++) {
-                        var aux = '<div>' + downloading[i] + '<a href="#!" class="secondary-content"><i class="material-icons">play_for_work</i></a></div>';
-                        $('#collectionDescargandose').append(aux);
+                    	var aux = '<li class="collection-header">' + downloading[i] + '</li>';
+                        $('#collectionDescargandose').prepend(aux);
 
                     }
                     var aux = ((result.downloaded / result.total) * 100);
@@ -149,12 +163,13 @@
                     $('#buttonBack').slideDown();
                     clearInterval(intervale);
                     $('#processBar').width('100%');
+                    $('#infoLog').html("");
 
                 }
                 var messages = result.messages;
                 for (var i = 0, l = messages.length; i < l; i++) {
                     var aux = '<li class="collection-header">' + messages[i] + '</li>';
-                    $('#infoLog').append(aux);
+                    $('#infoLog').prepend(aux);
                 }
 
 
