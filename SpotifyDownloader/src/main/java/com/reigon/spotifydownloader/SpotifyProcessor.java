@@ -19,184 +19,175 @@
  */
 package com.reigon.spotifydownloader;
 
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.SettableFuture;
-import com.wrapper.spotify.Api;
-import com.wrapper.spotify.methods.PlaylistRequest;
-import com.wrapper.spotify.methods.PlaylistTracksRequest;
-import com.wrapper.spotify.methods.authentication.ClientCredentialsGrantRequest;
-import com.wrapper.spotify.models.ClientCredentials;
-import com.wrapper.spotify.models.Image;
-import com.wrapper.spotify.models.Page;
-import com.wrapper.spotify.models.Playlist;
-import com.wrapper.spotify.models.PlaylistTrack;
-import com.wrapper.spotify.models.SimpleArtist;
 import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.wrapper.spotify.SpotifyApi;
+import com.wrapper.spotify.exceptions.SpotifyWebApiException;
+import com.wrapper.spotify.model_objects.credentials.ClientCredentials;
+import com.wrapper.spotify.model_objects.specification.ArtistSimplified;
+import com.wrapper.spotify.model_objects.specification.Image;
+import com.wrapper.spotify.model_objects.specification.Paging;
+import com.wrapper.spotify.model_objects.specification.Playlist;
+import com.wrapper.spotify.model_objects.specification.PlaylistTrack;
+import com.wrapper.spotify.requests.authorization.client_credentials.ClientCredentialsRequest;
+import com.wrapper.spotify.requests.data.playlists.GetPlaylistRequest;
+import com.wrapper.spotify.requests.data.playlists.GetPlaylistsTracksRequest;
 
 /*
  * @author Victor_Reiner_&_Gonzalo_Ruanes
  */
 public class SpotifyProcessor {
 
-    private List<Cancion> listaCanciones;
-    private int numTracks;
-    private Api api;
-    Interface textui;
-    private String clientId = "";
-    private String clientSecret = "";
-    
-    public SpotifyProcessor(Interface t) {
-        listaCanciones = new ArrayList<>();
-        this.numTracks = 0;
-        this.textui = t;
-        cargarApiKeys();
-    }
-    private void cargarApiKeys(){
-        
-        //Cargamos las API Keys
-        FileReader fr = null;
-        try {
-            
-            InputStream in = getClass().getResourceAsStream("/YSAPI_KEYS.txt"); 
-            BufferedReader br = new BufferedReader(new InputStreamReader(in));
-            br.readLine();
-            this.clientId = br.readLine();
-            this.clientSecret = br.readLine();
-                    
-        } catch (Exception ex) {
-            Logger.getLogger(YoutubeSearch.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    public void process(String url) throws UnsupportedEncodingException {
-        
-        //Decodeamos y encodeamos los nombres de usuario
-        String user = URLEncoder.encode(URLDecoder.decode(getUser(url), "UTF-8"), "UTF-8");
-        String idP = getIdPlayList(url);
+	private List<Cancion> listaCanciones;
+	private int numTracks;
+	private SpotifyApi api;
+	Interface textui;
+	private String clientId = "";
+	private String clientSecret = "";
 
-        System.out.println("Usuario: " + user + " - ID PlayList: " + idP);
-        textui.printText("Usuario: " + user + " - ID PlayList: " + idP);
+	public SpotifyProcessor(Interface t) {
+		listaCanciones = new ArrayList<>();
+		this.numTracks = 0;
+		this.textui = t;
+		cargarApiKeys();
+	}
 
-        // Create an API instance. The default instance connects to https://api.spotify.com/.
-        api = Api.builder()
-                .clientId(clientId)
-                .clientSecret(clientSecret)
-                .redirectURI("https://www.spotify.com/es/")
-                .build();
-        final ClientCredentialsGrantRequest request = api.clientCredentialsGrant().build();
+	private void cargarApiKeys() {
 
-        /* Use the request object to make the request, either asynchronously (getAsync) or synchronously (get) */
-        final SettableFuture<ClientCredentials> responseFuture = request.getAsync();
+		// Cargamos las API Keys
+		try {
 
-        /* Add callbacks to handle success and failure */
-        Futures.addCallback(responseFuture, new FutureCallback<ClientCredentials>() {
-            @Override
-            public void onSuccess(ClientCredentials clientCredentials) {
+			InputStream in = getClass().getResourceAsStream("/YSAPI_KEYS.txt");
+			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			br.readLine();
+			this.clientId = br.readLine();
+			this.clientSecret = br.readLine();
 
-                /* Set access token on the Api object so that it's used going forward */
-                api.setAccessToken(clientCredentials.getAccessToken());
-                textui.printText("Procediendo a analizar la playList...");
-                //Sacamos el numero de tracks que tiene la playlist
-                final PlaylistRequest infoPlayListRequest = api.getPlaylist(user, idP).build();
+		} catch (Exception ex) {
+			Logger.getLogger(YoutubeSearch.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
 
-                try {
-                    final Playlist playlist = infoPlayListRequest.get();
-                    numTracks = playlist.getTracks().getTotal();
-                    System.out.println("Num Tracks PlayList: " + numTracks);
-                    textui.printText("Num Tracks PlayList: " + numTracks);
-                    //Sacamos las canciones pasando el offset y el limite
-                    for (int i = 0; i <= numTracks - 1; i += 30) {
-                        cargarCanciones(i, 30, user, idP,textui);
-                    }
-                } catch (Exception e) {
-                    System.out.println("Something went wrong!" + e.getMessage());
-                    textui.printText("Something went wrong!" + e.getMessage());
-                }
-                
-         
-            }
+	public void process(String url) throws UnsupportedEncodingException {
 
-            @Override
-            public void onFailure(Throwable throwable) {
-                /* An error occurred while getting the access token. This is probably caused by the client id or
-     * client secret is invalid. */
-            }
-        });
+		// Decodeamos y encodeamos los nombres de usuario
+		final String user = URLEncoder.encode(URLDecoder.decode(getUser(url), "UTF-8"), "UTF-8");
+		final String idP = getIdPlayList(url);
 
-    }
+		System.out.println("Usuario: " + user + " - ID PlayList: " + idP);
+		textui.printText("Usuario: " + user + " - ID PlayList: " + idP);
 
-    private void cargarCanciones(int offset, int limit, String user, String idP, Interface textui) {
-        
-        final PlaylistTracksRequest playListTrackRequest = api.getPlaylistTracks(user, idP).offset(offset).limit(limit).build();
-        
-        try {
+		// Create an API instance. The default instance connects to
+		// https://api.spotify.com/.
 
-            Page<PlaylistTrack> page = playListTrackRequest.get();
+		api = new SpotifyApi.Builder().setClientId(clientId).setClientSecret(clientSecret).build();
 
-            List<PlaylistTrack> playlistTracks = page.getItems();
-            System.out.println("OFFSET = " + offset + " - Numero de tracks encontrados = " + playlistTracks.size());
-            
-            //Sacamos los datos de cada canción
-            for (PlaylistTrack playlistTrack : playlistTracks) {
-                String nombre = playlistTrack.getTrack().getName();
-                String album = playlistTrack.getTrack().getAlbum().getName();
-                Image imagen = playlistTrack.getTrack().getAlbum().getImages().get(0);
-                
-                int trackNum = playlistTrack.getTrack().getTrackNumber();
-                int discNum = playlistTrack.getTrack().getDiscNumber();
-                int duracion = playlistTrack.getTrack().getDuration();
-                
-                textui.printText("Canción: " + nombre + " - Album: " + album + " AÑADIDA A LA BUSQUEDA!");
-                
-                Cancion track = new Cancion(nombre, album, duracion, trackNum, discNum, imagen);
+		final ClientCredentialsRequest clientCredentialsRequest = api.clientCredentials().build();
+		/*
+		 * Use the request object to make the request synchronously (get)
+		 */
+		try {
+			final ClientCredentials clientCredentials = clientCredentialsRequest.execute();
+			// Set access token for further "spotifyApi" object usage
+			api.setAccessToken(clientCredentials.getAccessToken());
+			System.out.println("Expires in: " + clientCredentials.getExpiresIn());
+		} catch (IOException | SpotifyWebApiException e) {
+			System.out.println("Error: " + e.getMessage());
+		}
+		
+		System.out.println("Procediendo a analizar la playList...");
+		// Sacamos el numero de tracks que tiene la playlist
+		final GetPlaylistRequest getPlaylistRequest = api.getPlaylist(user, idP).build();
 
-                List<SimpleArtist> artistas = playlistTrack.getTrack().getArtists();
+		try {
+			final Playlist playlist = getPlaylistRequest.execute();
+			System.out.println("Nombre de la playlist " + playlist.getName());
+			numTracks = playlist.getTracks().getTotal();
+			System.out.println("Num Tracks PlayList: " + numTracks);
+			textui.printText("Num Tracks PlayList: " + numTracks);
+			// Sacamos las canciones pasando el offset y el limite
+			for (int i = 0; i <= numTracks - 1; i += 30) {
+				cargarCanciones(i, 30, user, idP, textui);
+			}
+		} catch (Exception e) {
+			System.out.println("Something went wrong processing playlist!" + e.getMessage());
+		}
 
-                for (SimpleArtist artista : artistas) {
-                    track.addArtista(artista.getName());
-                }
+	}
 
-                listaCanciones.add(track);
-            }
-            //Le damos un pequeño respiro a las conexiones
-            Thread.sleep(1000);
-        } catch (Exception e) {
-            System.out.println("Something went wrong! : " + e.getMessage());
-            textui.printText("Something went wrong! : " + e.getMessage());
-            
-        }
-    }
+	private void cargarCanciones(int offset, int limit, String user, String idP, Interface textui) {
 
-    public String getIdPlayList(String url) {
-        //Ejemplo url: https://open.spotify.com/user/reiner13/playlist/2plTFnZFDDIhyhGIGy377e
-        String idP = "";
-        String[] partes = url.split("/");
-        idP = partes[partes.length - 1];
+		try {
 
-        return idP;
-    }
+			final GetPlaylistsTracksRequest getPlaylistsTracksRequest = api.getPlaylistsTracks(user, idP).limit(limit)
+					.offset(offset).build();
+			final Paging<PlaylistTrack> playlistTrackPaging = getPlaylistsTracksRequest.execute();
 
-    public String getUser(String url) {
-        //Ejemplo url: https://open.spotify.com/user/reiner13/playlist/2plTFnZFDDIhyhGIGy377e
-        String user;
-        String[] partes = url.split("/");
-        user = partes[partes.length - 3];
+			PlaylistTrack[] playlistTracks = playlistTrackPaging.getItems();
+			System.out.println("OFFSET = " + offset + " - Numero de tracks encontrados = " + playlistTracks.length);
 
-        return user;
-    }
+			// Sacamos los datos de cada canción
+			for (PlaylistTrack playlistTrack : playlistTracks) {
+				String nombre = playlistTrack.getTrack().getName();
+				String album = playlistTrack.getTrack().getAlbum().getName();
+				Image imagen = playlistTrack.getTrack().getAlbum().getImages()[0];
 
-    public List<Cancion> getListaCanciones() {
-        return listaCanciones;
-    }
+				int trackNum = playlistTrack.getTrack().getTrackNumber();
+				int discNum = playlistTrack.getTrack().getDiscNumber();
+				int duracion = playlistTrack.getTrack().getDurationMs();
+
+				System.out.println("Canción: " + nombre + " - Album: " + album + " AÑADIDA A LA BUSQUEDA!");
+
+				Cancion track = new Cancion(nombre, album, duracion, trackNum, discNum, imagen);
+
+				ArtistSimplified[] artistas = playlistTrack.getTrack().getArtists();
+
+				for (ArtistSimplified artista : artistas) {
+					track.addArtista(artista.getName());
+				}
+
+				listaCanciones.add(track);
+			}
+		} catch (Exception e) {
+			System.out.println("Something went wrong processing songs! : " + e.getMessage());
+			System.out.println(e.getCause());
+			System.out.println(e.getStackTrace());
+		}
+	}
+
+	public String getIdPlayList(String url) {
+		// Ejemplo url:
+		// https://open.spotify.com/user/reiner13/playlist/2plTFnZFDDIhyhGIGy377e
+		String idP = "";
+		String[] partes0 = url.split("\\?");
+		String[] partes = partes0[0].split("/");
+		idP = partes[partes.length - 1];
+		return idP;
+	}
+
+	public String getUser(String url) {
+		// Ejemplo url:
+		// https://open.spotify.com/user/reiner13/playlist/2plTFnZFDDIhyhGIGy377e
+		String user = "";
+		String[] partes0 = url.split("\\?");
+		String[] partes = partes0[0].split("/");
+		user = partes[partes.length - 3];
+
+		return user;
+	}
+
+	public List<Cancion> getListaCanciones() {
+		return listaCanciones;
+	}
 
 }

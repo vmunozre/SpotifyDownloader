@@ -26,7 +26,8 @@ import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.Mp3File;
 import com.mpatric.mp3agic.NotSupportedException;
 import com.mpatric.mp3agic.UnsupportedTagException;
-import com.wrapper.spotify.models.Image;
+import com.wrapper.spotify.model_objects.specification.Image;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;

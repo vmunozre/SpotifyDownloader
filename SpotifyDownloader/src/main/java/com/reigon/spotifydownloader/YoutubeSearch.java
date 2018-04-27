@@ -30,7 +30,6 @@ import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.SearchResult;
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -75,7 +74,6 @@ public class YoutubeSearch {
     //Cargamos la ApiKey
     private String cargarApiKey(){
         String resultado = "";
-        FileReader fr = null;
         try {
             InputStream in = getClass().getResourceAsStream("/YSAPI_KEYS.txt"); 
             BufferedReader br = new BufferedReader(new InputStreamReader(in));

@@ -42,7 +42,8 @@ public class YoutubeVideoInfo {
 
     }
     //Sacamos la duración de un video
-    public int getLongitudVideo(String videoId, String apiKey) {
+    @SuppressWarnings("unchecked")
+	public int getLongitudVideo(String videoId, String apiKey) {
         //https://www.googleapis.com/youtube/v3/videos?id=5hzgS9s-tE8&key=YOUR_API_KEY&part=snippet,contentDetails,statistics,status
         URLBuilder lookup_builder = new URLBuilder("/youtube/v3/videos").addParameter("id", videoId).addParameter("key", apiKey).addParameter("part", "contentDetails");
 
@@ -63,9 +64,9 @@ public class YoutubeVideoInfo {
          */
         Map<String, Object> response = gson.fromJson(json_builder.toString(), new TypeToken<Map<String, Object>>() {
         }.getType());
-        ArrayList aux = (ArrayList) response.get("items");
-        Map<String, Object> aux2 = (Map) aux.get(0);
-        Map<String, Object> aux3 = (Map) aux2.get("contentDetails");
+        ArrayList<Object> aux = (ArrayList<Object>) response.get("items");
+        Map<String, Object> aux2 = (Map<String, Object>) aux.get(0);
+        Map<String, Object> aux3 = (Map<String, Object>) aux2.get("contentDetails");
         
 
         return (int) getDuration(aux3.get("duration").toString());

@@ -53,6 +53,7 @@ import javafx.stage.Modality;
 /*
  * @author Victor_Reiner_&_Gonzalo_Ruanes
  */
+@SuppressWarnings("restriction")
 public class Interface extends Application {
 
     private String url;
@@ -213,6 +214,7 @@ public class Interface extends Application {
                             d.start();
                         } catch (Exception e) {
                             System.out.println("Error en el Hilo: " + e.getMessage());
+                            e.printStackTrace();
 
                         }
                     }
@@ -336,9 +338,7 @@ public class Interface extends Application {
     }
 
     public void printText(String t) {
-        this.text.appendText(t);
-        this.text.appendText("\n");
-
+    	this.text.appendText(t + "\n");
     }
 
     public void clearText() {

@@ -10,6 +10,12 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
+    <repositories>
+		<repository>
+		    <id>jitpack.io</id>
+		    <url>https://jitpack.io</url>
+		</repository>
+	</repositories>
 
     <dependencies>
         
@@ -18,11 +24,12 @@
             <artifactId>mp3agic</artifactId>
             <version>0.8.3</version>
         </dependency>
-        <dependency>
-            <groupId>se.michaelthelin.spotify</groupId>
-            <artifactId>spotify-web-api-java</artifactId>
-            <version>1.7.1</version>
-        </dependency>
+        <!-- https://mvnrepository.com/artifact/se.michaelthelin.spotify/spotify-web-api-java -->
+		<dependency>
+		    <groupId>se.michaelthelin.spotify</groupId>
+		    <artifactId>spotify-web-api-java</artifactId>
+		    <version>2.0.2</version>
+		</dependency>
         <dependency>
             <groupId>com.google.apis</groupId>
             <artifactId>google-api-services-youtube</artifactId>
@@ -38,6 +45,12 @@
             <artifactId>gson</artifactId>
             <version>2.4</version>
         </dependency>
+		<dependency>
+	    <groupId>com.github.sapher</groupId>
+	    <artifactId>youtubedl-java</artifactId>
+	    <version>1.1</version>
+	</dependency>
+
        
     </dependencies>
     <build>

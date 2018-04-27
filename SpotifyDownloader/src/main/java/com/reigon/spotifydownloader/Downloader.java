@@ -52,7 +52,7 @@ public class Downloader {
     public Downloader(String url,String path, Interface textui){
         this.spotifyURL = url;
         this.folderpath = path;
-        this.failedsongs = new ArrayList();
+        this.failedsongs = new ArrayList<Cancion>();
         this.textui = textui;
         
     }
